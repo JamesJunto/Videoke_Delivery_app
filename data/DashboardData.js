@@ -1,4 +1,4 @@
-const DashboardData = [
+export const DashboardData = [
   {
     title: "Customers",
     value: 128,
@@ -20,4 +20,22 @@ const DashboardData = [
     icon: "cash-outline",
   },
 ];
-export default DashboardData;
+
+export const RecentDeliveriesData = [
+  {
+    id: 1,
+    customer: "Juan Dela Cruz",
+    item: "Videoke Set",
+    address: "Davao City",
+    status: "Delivered",
+    date: "Sep 26, 2026",
+  },
+  {
+    id: 2,
+    customer: "Maria Santos",
+    item: "Sound System",
+    address: "Bajada, Davao City",
+    status: "Out for Delivery",
+    date: "Sep 26, 2026",
+  },
+];

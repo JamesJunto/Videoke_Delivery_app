@@ -1,38 +1,27 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 
-import DashboardData from "../../data/DashboardData";
+import DashboardCards from "../../components/DashboardComponents/DashboardCard";
+import RecentDeliveries from "../../components/DashboardComponents/RecentDeliveries";
 
 const DashboardScreen = () => {
   return (
-    <View className="flex-1 px-3 py-4">
+    <ScrollView className="flex-1" contentContainerClassName="px-3 py-4">
       <Text className="mb-4 text-xl font-bold text-gray-900">Dashboard</Text>
 
       <View className="flex-row flex-wrap justify-between gap-y-3">
-        {DashboardData.map((item) => (
-          <View
-            key={item.title}
-            className="w-[48%] rounded-xl border border-gray-200 bg-white p-3"
-            style={{
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 1 },
-              shadowOpacity: 0.05,
-              shadowRadius: 5,
-              elevation: 1,
-            }}
-          >
-            <Ionicons name={item.icon} size={35} color="#C1272D" />
-            <Text className="text-[12px] uppercase mt-1 text-gray-600">
-              {item.title}
-            </Text>
-
-            <Text className="mt-0.5 text-xl font-bold text-gray-900">
-              {item.value}
-            </Text>
-          </View>
-        ))}
+        <DashboardCards />
       </View>
-    </View>
+
+      <View className="mt-4 w-full">
+        <Text className="text-[18px] font-medium text-gray-400">
+          RECENT DELIVERIES
+        </Text>
+
+        <View className="mt-3 w-full gap-3">
+          <RecentDeliveries />
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
