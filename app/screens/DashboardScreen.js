@@ -17,7 +17,7 @@ const DashboardScreen = () => {
           RECENT DELIVERIES
         </Text>
 
-        <View className="mt-3 w-full gap-3">
+        <View className=" flex-col justify-between mt-3 w-full gap-3">
           <RecentDeliveries />
         </View>
       </View>
