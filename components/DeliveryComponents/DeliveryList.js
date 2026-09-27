@@ -1,17 +1,17 @@
 import { Text, View } from "react-native";
-import { RecentDeliveriesData } from "../../data/DashboardData";
+import { DeliveryData } from "../../data/DeliveryData";
 
-const RecentDeliveries = () => {
+const DeliveryList = () => {
   return (
     <>
-      {RecentDeliveriesData.map((delivery) => {
+      {DeliveryData.map((delivery) => {
         let statusBg = "bg-gray-100";
         let statusText = "text-gray-600";
 
         if (delivery.status === "Delivered") {
           statusBg = "bg-green-100";
           statusText = "text-green-700";
-        } else if (delivery.status === "Out for Delivery") {
+        } else if (delivery.status === "On the way") {
           statusBg = "bg-blue-100";
           statusText = "text-blue-700";
         } else if (delivery.status === "Pending") {
@@ -22,22 +22,20 @@ const RecentDeliveries = () => {
         return (
           <View
             key={delivery.id}
-            className="rounded-[5px] bg-white p-4 h-20 border border-gray-300 flex-row justify-between items-center shadow-sm"
+            className="rounded-[8px] bg-white p-4 h-20 flex-row justify-between items-center border border-gray-300 shadow-sm"
           >
             <View>
               <Text className="text-[20px] font-semibold text-gray-800">
                 {delivery.customer}
               </Text>
 
-              <Text className="mt-1 text-xs text-gray-700">
+              <Text className="mt-1 text-xs text-gray-600">
                 {delivery.address}
               </Text>
             </View>
 
             <View>
-              <View
-                className={`rounded-full ml-2 w-full  px-1 py-1 ${statusBg}`}
-              >
+              <View className={`rounded-full  ml-2 px-1 py-1 ${statusBg}`}>
                 <Text
                   className={`text-[14px] text-center font-semibold ${statusText}`}
                 >
@@ -45,7 +43,7 @@ const RecentDeliveries = () => {
                 </Text>
               </View>
 
-              <Text className="mt-1 ml-4 text-[17px] text-gray-600">
+              <Text className="mt-1 ml-2 text-[17px] text-gray-800">
                 {delivery.date}
               </Text>
             </View>
@@ -56,4 +54,4 @@ const RecentDeliveries = () => {
   );
 };
 
-export default RecentDeliveries;
+export default DeliveryList;

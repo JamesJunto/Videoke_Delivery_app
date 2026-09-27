@@ -75,16 +75,18 @@ const BottomNavigation = () => {
 
       <Pressable
         className="flex-1 items-center justify-center"
-        onPress={() => router.push("/screens/deliveries")}
+        onPress={() => router.push("/screens/DeliveriesScreen")}
       >
         <Ionicons
           name="bicycle-outline"
           size={23}
-          color={pathname === "/screens/deliveries" ? "#B22222" : "#000000"}
+          color={
+            pathname === "/screens/DeliveriesScreen" ? "#B22222" : "#000000"
+          }
         />
         <Text
           className={`mt-0.5 text-[14px] font-medium ${
-            pathname === "/screens/deliveries"
+            pathname === "/screens/DeliveriesScreen"
               ? "text-[#B22222]"
               : "text-black-500"
           }`}

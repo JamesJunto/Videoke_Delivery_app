@@ -30,11 +30,13 @@ const CustomersScreen = () => {
       <View className="absolute bottom-2 right-5">
         <Pressable
           onPress={() => console.log("Add Customer Pressed")}
-          className="h-7 p-5 flex-row items-center rounded-[10px] bg-[#C1272D] px-3"
+          className="h-4 p-4 flex-row items-center rounded-[10px] bg-[#C1272D] px-3"
         >
-          <Text className="mr-1 text-base font-bold text-white">+</Text>
+          <Text className="mr-1 text-[24px] font-bold text-white">+</Text>
 
-          <Text className="text-xs font-semibold text-white">Add Customer</Text>
+          <Text className="text-[18px] font-semibold text-white">
+            Add Customer
+          </Text>
         </Pressable>
       </View>
     </View>

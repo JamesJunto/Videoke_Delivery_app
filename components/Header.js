@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <View className="h-12 flex-row items-center justify-between bg-[#C1272D] px-4 shadow-md">
       <Text className="text-[22px] font-bold text-white tracking-wide">
-        Videoke Delivery
+        Cabway Videoke
       </Text>
 
       <Pressable

@@ -13,7 +13,7 @@ const DashboardScreen = () => {
       </View>
 
       <View className="mt-4 w-full">
-        <Text className="text-[18px] font-medium text-gray-400">
+        <Text className="text-[18px] font-medium text-gray-600">
           RECENT DELIVERIES
         </Text>
 
