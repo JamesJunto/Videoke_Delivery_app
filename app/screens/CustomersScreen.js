@@ -9,6 +9,7 @@ const CustomersScreen = () => {
         className="flex-1 px-3"
         contentContainerClassName="pb-24 pt-20"
       >
+        <Text className="mb-4 text-xl font-bold text-gray-900">Customers</Text>
         <View className="gap-2">
           <CustomerListCard />
         </View>

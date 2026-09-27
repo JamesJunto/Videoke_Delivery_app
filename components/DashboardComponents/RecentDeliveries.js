@@ -35,7 +35,9 @@ const RecentDeliveries = () => {
             </View>
 
             <View>
-              <View className={`rounded-full ml-2 px-3 py-1 ${statusBg}`}>
+              <View
+                className={`rounded-full ml-2 w-full  px-1 py-1 ${statusBg}`}
+              >
                 <Text
                   className={`text-[14px] text-center font-semibold ${statusText}`}
                 >

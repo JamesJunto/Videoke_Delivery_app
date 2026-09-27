@@ -36,15 +36,16 @@ const CustomerListCard = () => {
               </View>
 
               <View className="items-end">
-                <Text className="text-[17px] text-gray-500">
-                  {customer.address}
-                </Text>
-
-                <View className={`mt-2 rounded-full px-2 py-1 ${statusBg}`}>
+                <View
+                  className={`mt-1 mb-1 rounded-full px-2 py-1 ${statusBg}`}
+                >
                   <Text className={`text-[16px] font-semibold ${statusText}`}>
                     {customer.status}
                   </Text>
                 </View>
+                <Text className="text-[17px] text-gray-500">
+                  {customer.address}
+                </Text>
               </View>
             </View>
           </View>

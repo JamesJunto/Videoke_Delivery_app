@@ -23,7 +23,7 @@ const DashboardCards = () => {
             {item.title}
           </Text>
 
-          <Text className="mt-0.5 text-xl font-bold text-gray-900">
+          <Text className="mt-0.5 text-[26px] font-bold text-gray-900 w-full">
             {item.value}
           </Text>
         </View>

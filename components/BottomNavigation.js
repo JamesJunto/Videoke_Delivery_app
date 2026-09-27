@@ -19,7 +19,7 @@ const BottomNavigation = () => {
           }
         />
         <Text
-          className={`mt-0.5 text-[11px] font-medium ${
+          className={`mt-0.5 text-[14px] font-medium ${
             pathname === "/screens/DashboardScreen"
               ? "text-[#B22222]"
               : "text-black-500"
@@ -41,7 +41,7 @@ const BottomNavigation = () => {
           }
         />
         <Text
-          className={`mt-0.5 text-[11px] font-medium ${
+          className={`mt-0.5 text-[14px] font-medium ${
             pathname === "/screens/CustomersScreen"
               ? "text-[#B22222]"
               : "text-black-500"
@@ -53,16 +53,18 @@ const BottomNavigation = () => {
 
       <Pressable
         className="flex-1 items-center justify-center"
-        onPress={() => router.push("/screens/inventory")}
+        onPress={() => router.push("/screens/InventoryScreen")}
       >
         <Ionicons
           name="cube-outline"
           size={21}
-          color={pathname === "/screens/inventory" ? "#B22222" : "#000000"}
+          color={
+            pathname === "/screens/InventoryScreen" ? "#B22222" : "#000000"
+          }
         />
         <Text
-          className={`mt-0.5 text-[11px] font-medium ${
-            pathname === "/screens/inventory"
+          className={`mt-0.5 text-[14px] font-medium ${
+            pathname === "/screens/InventoryScreen"
               ? "text-[#B22222]"
               : "text-black-500"
           }`}
@@ -77,11 +79,11 @@ const BottomNavigation = () => {
       >
         <Ionicons
           name="bicycle-outline"
-          size={21}
+          size={23}
           color={pathname === "/screens/deliveries" ? "#B22222" : "#000000"}
         />
         <Text
-          className={`mt-0.5 text-[11px] font-medium ${
+          className={`mt-0.5 text-[14px] font-medium ${
             pathname === "/screens/deliveries"
               ? "text-[#B22222]"
               : "text-black-500"
