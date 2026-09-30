@@ -1,10 +1,10 @@
 import { Text, View } from "react-native";
-import { CustomerData } from "../../data/CustomersData";
-
+import useCustomer from "../../hooks/useCustomer";
 const CustomerListCard = () => {
+  const customers = useCustomer()
   return (
     <>
-      {CustomerData.map((customer) => {
+      {customers.map((customer) => {
         let statusBg = "bg-gray-100";
         let statusText = "text-gray-600";
 
@@ -21,13 +21,13 @@ const CustomerListCard = () => {
 
         return (
           <View
-            key={customer.id}
+            key={customer.customer_id}
             className="rounded-[10px] border border-gray-300 bg-white p-3 "
           >
             <View className="flex-row justify-between">
               <View>
                 <Text className="text-[18px] font-semibold text-gray-900">
-                  {customer.name}
+                  {customer.full_name}
                 </Text>
 
                 <Text className="mt-1 text-[16px] text-gray-500">
