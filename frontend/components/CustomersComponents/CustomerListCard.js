@@ -8,13 +8,13 @@ const CustomerListCard = () => {
         let statusBg = "bg-gray-100";
         let statusText = "text-gray-600";
 
-        if (customer.status === "Delivered") {
+        if (customer.status === "delivered") {
           statusBg = "bg-green-100";
           statusText = "text-green-700";
-        } else if (customer.status === "Ongoing") {
+        } else if (customer.status === "ongoing") {
           statusBg = "bg-blue-100";
           statusText = "text-blue-700";
-        } else if (customer.status === "Pending") {
+        } else if (customer.status === "pending") {
           statusBg = "bg-yellow-100";
           statusText = "text-yellow-700";
         }
@@ -27,7 +27,7 @@ const CustomerListCard = () => {
             <View className="flex-row justify-between">
               <View>
                 <Text className="text-[18px] font-semibold text-gray-900">
-                  {customer.full_name}
+                  {customer.FullName}
                 </Text>
 
                 <Text className="mt-1 text-[16px] text-gray-500">
