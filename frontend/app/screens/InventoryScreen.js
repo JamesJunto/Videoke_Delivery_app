@@ -5,9 +5,8 @@ import AddProductModal from "../../components/InventoryComponents/AddProductModa
 
 const filters = [
   { label: "All", value: "All" },
-  { label: "Available", value: "Available" },
-  { label: "Out of Stock", value: "Out of Stock" },
-  { label: "Sold", value: "Sold" },
+  { label: "Available", value: "available" },
+  { label: "Out of Stock", value: "out of stock" },
 ];
 
 const InventoryScreen = () => {
@@ -17,7 +16,7 @@ const InventoryScreen = () => {
   return (
     <View className="flex-1">
       <View className="absolute left-0 right-0 top-0 z-10 h-9 border-b border-gray-300 bg-white px-3 pt-2">
-        <View className="flex-row items-center justify-between gap-1">
+        <View className="flex-row items-center justify-center gap-5">
           {filters.map((filter) => (
             <Pressable
               key={filter.value}

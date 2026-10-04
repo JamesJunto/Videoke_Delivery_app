@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { View, Text, TextInput } from "react-native";
-
+import { View, Text, TextInput, Pressable } from "react-native";
+import { addInventoryItem } from "../../services/inventoryServices"
 const InventoryForm = () => {
   const [form, setForm] = useState({
     productName: "",
     category: "",
     quantity: "",
+    price: "",
     supplier: "",
   });
 
@@ -16,9 +17,18 @@ const InventoryForm = () => {
     });
   };
 
+  const handleSubmit = async () => {
+    try {
+      const response = await addInventoryItem(form);
+
+      console.log("Inventory added:", response);
+    } catch (error) {
+      console.error("Failed to add inventory:", error);
+    }
+  };
+
   return (
     <View className="rounded-xl bg-white p-5">
-
       <Text className="mb-2 text-sm font-semibold text-gray-600">
         Product Name
       </Text>
@@ -57,6 +67,19 @@ const InventoryForm = () => {
       />
 
       <Text className="mb-2 text-sm font-semibold text-gray-600">
+        Price
+      </Text>
+
+      <TextInput
+        value={form.price}
+        onChangeText={(value) => updateField("price", value)}
+        className="mb-4 h-12 rounded-lg border border-gray-500 bg-gray-50 px-4 text-[15px] text-gray-800"
+        placeholder="Enter price"
+        placeholderTextColor="#999"
+        keyboardType="numeric"
+      />
+
+      <Text className="mb-2 text-sm font-semibold text-gray-600">
         Supplier
       </Text>
 
@@ -68,6 +91,14 @@ const InventoryForm = () => {
         placeholderTextColor="#999"
       />
 
+      <Pressable
+        onPress={handleSubmit}
+        className="h-10 items-center justify-center rounded-[10px] bg-[#C1272D] active:opacity-80"
+      >
+        <Text className="text-[16px] font-semibold text-white">
+          Add Inventory
+        </Text>
+      </Pressable>
     </View>
   );
 };

@@ -50,16 +50,6 @@ const AddProductModal = ({ visible, onClose }) => {
           <InventoryForm />
         </ScrollView>
 
-        <View
-          className="border-t border-gray-400 bg-white px-6 pt-3"
-          style={{ paddingBottom: insets.bottom + 12 }}
-        >
-          <Pressable className="h-10 items-center justify-center rounded-[10px] bg-[#C1272D] active:opacity-80">
-            <Text className="text-[16px] font-semibold text-white">
-              Add inventory
-            </Text>
-          </Pressable>
-        </View>
       </KeyboardAvoidingView>
     </Modal>
   );
