@@ -9,7 +9,6 @@ router.get('/', (req, res) => {
             console.error('Error fetching customers:', err)
             res.status(500).json({ error: 'Internal server error' })
         } else {
-            console.log('Fetched customers:', results)
             res.json(results)
         }
     })

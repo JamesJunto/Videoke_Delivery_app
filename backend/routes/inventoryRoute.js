@@ -9,7 +9,6 @@ router.get('/', (req, res) => {
             console.error('Error fetching inventory:', err)
             res.status(500).json({ error: 'Internal server error' })
         } else {
-            console.log('Fetched inventory:', results)
             res.json(results)
         }
     })

@@ -4,7 +4,8 @@ import DashboardCards from "../../components/DashboardComponents/DashboardCard";
 import RecentDeliveries from "../../components/DashboardComponents/RecentDeliveries";
 
 const DashboardScreen = () => {
-  return (
+
+return (
     <ScrollView className="flex-1" contentContainerClassName="px-3 py-4">
       <Text className="mb-4 text-xl font-bold text-gray-900">Dashboard</Text>
 
