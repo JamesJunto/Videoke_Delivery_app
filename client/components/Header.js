@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 
 const Header = () => {
-  const name = "James";
+  const name = "Oskar";
 
   return (
     <View
