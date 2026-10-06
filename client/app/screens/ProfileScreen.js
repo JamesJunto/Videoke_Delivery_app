@@ -60,7 +60,7 @@ const ProfileScreen = () => {
       >
         <Text className="mb-4 text-xl font-bold text-gray-900">Profile</Text>
 
-        <View className="items-center rounded-[10px] border border-gray-200 bg-white px-4 py-6">
+        <View className="items-center rounded-[10px] border border-gray-300 bg-white px-4 py-6">
           <View className="h-20 w-20 items-center justify-center rounded-full  bg-[#B22222]">
             <Text className="text-2xl font-bold text-white">
               {getInitials(user.name)}

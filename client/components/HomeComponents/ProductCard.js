@@ -1,8 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 import useProducts from "../../hooks/useProducts";
+import { useCart } from "../../context/cartContext";
+
 const HomeCards = () => {
   const products = useProducts();
+  const { addToCart } = useCart()
+
   return (
     <>
       {products.map((item) => (
@@ -53,7 +57,7 @@ const HomeCards = () => {
 
             <Pressable
               className="mt-3 h-10 flex-row items-center justify-center rounded-xl bg-[#C1272D]"
-              onPress={() => console.log("Order:", item.product_name)}
+              onPress={() => addToCart(item)}
             >
               <Ionicons
                 name="cart-outline"
