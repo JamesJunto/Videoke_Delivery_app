@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 import { useCart } from "../context/cartContext";
+import { addOrder } from "../services/orderServices";
 
 const formatPrice = (value) =>
   `₱${value.toLocaleString("en-PH", {
@@ -19,6 +20,23 @@ const CartModal = ({ visible, onClose }) => {
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+  const handleCheckOut = async () => {
+    try {
+      const order = {
+        order_id: 222,
+        customer_id: 1,
+        items: cart,
+        total: total,
+      };
+
+      const res = await addOrder(order);
+
+      console.log("Order added:", res);
+      onClose();
+    } catch (error) {
+      console.error("Checkout error:", error);
+    }
+  };
   return (
     <Modal
       visible={visible}
@@ -114,7 +132,7 @@ const CartModal = ({ visible, onClose }) => {
               </View>
 
               <Pressable
-                onPress={() => alert("Proceed to checkout")}
+                onPress={() => handleCheckOut()}
                 className="items-center rounded-lg bg-[#B22222] py-3.5 active:opacity-90"
               >
                 <Text className="font-semibold text-white">Checkout</Text>
