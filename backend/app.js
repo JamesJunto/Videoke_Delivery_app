@@ -1,6 +1,7 @@
 import express from "express";
 import customerRoute from "./routes/customerRoute.js";
 import inventoryRoute from "./routes/inventoryRoute.js";
+import ordersRoute from "./routes/ordersRoute.js"
 import cors from "cors";
 import { WebSocketServer, WebSocket } from "ws";
 
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.use("/api/customers", customerRoute);
 app.use("/api/inventory", inventoryRoute);
+app.use("/api/orders", ordersRoute);
 
 const server = app.listen(3000);
 
