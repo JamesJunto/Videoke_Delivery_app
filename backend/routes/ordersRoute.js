@@ -2,6 +2,7 @@ import express from 'express'
 import { db } from '../db.js'
 
 const router = express.Router()
+//FAKE DATA PA
 const price = 222
 router.post('/', (req, res) => {
   const { order_id, customer_id, items, total } = req.body
