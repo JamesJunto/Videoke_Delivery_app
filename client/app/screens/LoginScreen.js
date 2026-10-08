@@ -6,7 +6,7 @@ export default function Login() {
     <View>
       <Text>Login</Text>
 
-      <Pressable onPress={() => router.replace("/screens/DashboardScreen")}>
+      <Pressable onPress={() => router.replace("/screens/HomeScreen")}>
         <Text>Sign In</Text>
       </Pressable>
     </View>
