@@ -24,4 +24,27 @@ router.post('/', (req, res) => {
   res.status(201).send('Order created successfully')
 })
 
+router.get('/', (req, res) => {
+  db.query(
+    `SELECT
+        o.order_id,
+        o.customer_id,
+        p.product_name,
+        o.total,
+        o.quantity,
+        o.price
+    FROM orders o
+    JOIN inventory p
+        ON o.product_id = p.product_id`,
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Error fetching orders');
+      }
+
+      res.json(result);
+    }
+  );
+});
+
 export default router
