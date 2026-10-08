@@ -1,17 +1,15 @@
 import express from 'express'
-import { db } from '../db.js'
-
+import { getCustomer } from '../services/customerServices.js'
 const router = express.Router()
 
 router.get('/', (req, res) => {
-    db.query("SELECT customer_id, CONCAT(first_name, ' ', last_name) AS FullName, phone, address, status FROM customers", (err, results) => {
-        if (err) {
-            console.error('Error fetching customers:', err)
-            res.status(500).json({ error: 'Internal server error' })
-        } else {
-            res.json(results)
-        }
-    })
+  getCustomer((err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Error fetching orders");
+    }
+    res.json(result);
+ })
 })
 
 export default router
