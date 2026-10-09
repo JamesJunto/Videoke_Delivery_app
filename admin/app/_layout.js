@@ -1,12 +1,17 @@
 import { Slot } from "expo-router";
 import { View } from "react-native";
-import {SafeAreaProvider, SafeAreaView} from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { usePathname } from "expo-router";
 import { useEffect } from "react";
 import connectWebSocket from "../services/websocketService";
 import BottomNavigation from "../components/BottomNavigation";
 import Header from "../components/Header";
 
 export default function Layout() {
+  const pathname = usePathname();
+
+  const isLoginScreen = pathname === "/screens/LoginScreen";
+
   useEffect(() => {
     connectWebSocket();
   }, []);
@@ -14,13 +19,13 @@ export default function Layout() {
   return (
     <SafeAreaProvider>
       <SafeAreaView className="flex-1 bg-gray-50">
-        <Header />
+        {!isLoginScreen && <Header />}
 
-      <View className="flex-1 ">
-        <Slot />
-      </View>
+        <View className="flex-1 ">
+          <Slot />
+        </View>
 
-      <BottomNavigation />
+        {!isLoginScreen && <BottomNavigation />}
     </SafeAreaView>
     </SafeAreaProvider>
   );
