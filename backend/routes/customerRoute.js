@@ -1,5 +1,6 @@
 import express from 'express'
 import { getCustomer } from '../services/customerServices.js'
+
 const router = express.Router()
 
 router.get('/', (req, res) => {
