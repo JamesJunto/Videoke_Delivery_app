@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getOrders} from '../services/orderServices';
-
+import { addOrder } from '../services/orderServices';
 const useOrders = () => {
     const [orders, setOrders] = useState([]);
 
@@ -13,7 +13,16 @@ const useOrders = () => {
         fetchCustomers();
     }, []);
 
-    return orders;
+  const handleAddOrder = async (order) => {
+    const data = await addOrder(order)
+
+    setItem((prevItems) => [...prevItems, data]);
+
+    return data
+  }
+
+  return{orders, handleAddOrder}
+
 };
 
 export default useOrders;

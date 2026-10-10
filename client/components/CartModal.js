@@ -7,8 +7,7 @@ import {
   View,
 } from "react-native";
 import { useCart } from "../context/cartContext";
-import { addOrder } from "../services/orderServices";
-
+import useOrders from "../hooks/useOrders";
 const formatPrice = (value) =>
   `₱${value.toLocaleString("en-PH", {
     minimumFractionDigits: 2,
@@ -16,6 +15,7 @@ const formatPrice = (value) =>
 
 const CartModal = ({ visible, onClose }) => {
   const { cart, removeFromCart } = useCart();
+  const { handleAddOrder } = useOrders()
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -29,9 +29,9 @@ const CartModal = ({ visible, onClose }) => {
         total: total,
       };
 
-      const res = await addOrder(order);
+     await handleAddOrder(order);
 
-      console.log("Order added:", res);
+      console.log("Order added");
       onClose();
     } catch (error) {
       console.error("Checkout error:", error);

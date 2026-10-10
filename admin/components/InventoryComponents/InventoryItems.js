@@ -2,12 +2,12 @@ import { Text, View } from "react-native";
 import useInventory from "../../hooks/useInventory";
 
 const InventoryItems = ({ filteredStatus }) => {
-  const InventoryData = useInventory();
+  const { items } = useInventory();
 
   const filteredItems =
     filteredStatus === "All"
-      ? InventoryData
-      : InventoryData.filter((item) => item.status === filteredStatus);
+    ? items
+      :items.filter((item) => item.status === filteredStatus);
 
   return (
     <>

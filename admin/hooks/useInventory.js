@@ -1,19 +1,30 @@
-import { useEffect, useState } from 'react';
-import { getInventory } from '../services/inventoryServices';
+import { useEffect, useState } from "react";
+import {
+  getInventory,
+  addInventoryItem,
+} from "../services/inventoryServices";
 
 const useInventory = () => {
-    const [item, setItem] = useState([]);
+  const [items, setItem] = useState([]);
 
-    useEffect(() => {
-        const fetchInventory = async () => {
-            const data = await getInventory();
-            setItem(data);
-        };
+  useEffect(() => {
+    const fetchInventory = async () => {
+      const data = await getInventory();
+      setItem(data);
+    };
 
-        fetchInventory();
-    }, []);
+    fetchInventory();
+  }, []);
 
-    return item;
+  const handleAddInventory = async (form) => {
+    const data = await addInventoryItem(form);
+
+    setItem((prevItems) => [...prevItems, data]);
+
+    return data;
+  };
+
+  return { items, handleAddInventory };
 };
 
 export default useInventory;

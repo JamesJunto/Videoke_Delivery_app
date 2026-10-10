@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
-import { addInventoryItem } from "../../services/inventoryServices"
+import { View, Text, TextInput, Pressable } from "react-native"
+import useInventory from "../../hooks/useInventory";
 const InventoryForm = () => {
+  const { handleAddInventory } = useInventory()
+
   const [form, setForm] = useState({
     productName: "",
     category: "",
@@ -19,13 +21,12 @@ const InventoryForm = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await addInventoryItem(form);
-
-      console.log("Inventory added:", response);
+      await handleAddInventory(form);
+      console.log("Inventory added successfully");
     } catch (error) {
       console.error("Failed to add inventory:", error);
     }
-  };
+  }
 
   return (
     <View className="rounded-xl bg-white p-5">
