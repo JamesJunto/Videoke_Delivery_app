@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
   getCustomer((err, result) => {
     if (err) {
       console.error(err);
-      return res.status(500).send("Error fetching orders");
+      return res.status(500).send("Error fetching customers");
     }
     res.json(result);
  })
