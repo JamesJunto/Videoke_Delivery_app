@@ -3,6 +3,7 @@ import customerRoute from "./routes/customerRoute.js";
 import inventoryRoute from "./routes/inventoryRoute.js";
 import ordersRoute from "./routes/ordersRoute.js"
 import authRoutes from "./routes/authRoutes.js"
+import { rateLimiter } from "./middleware/rateLimit.js";
 import cors from "cors";
 import { WebSocketServer, WebSocket } from "ws";
 
@@ -11,12 +12,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use(rateLimiter)
+
 app.use("/api/customers", customerRoute);
 app.use("/api/inventory", inventoryRoute);
 app.use("/api/orders", ordersRoute);
 app.use("/api/login", authRoutes)
 
-const server = app.listen(3000);
+const server = app.listen(3000, () => {
+  console.log(" Server running on port 3000");
+});
 
 //WEBSOCKET SERVER
 const wss = new WebSocketServer({ server });
