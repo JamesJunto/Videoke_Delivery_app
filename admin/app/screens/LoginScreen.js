@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { View, Text, TextInput, Pressable } from "react-native";
-import { getAuth }  from "../../services/authService";
-
+import useAuth from "../../hooks/useAuth";
 export default function Login() {
+  const { handleLogin } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSignIn = async () => {
     try {
-      const response = await getAuth(email, password)
+      const response = await handleLogin(email, password);
       console.log("Login user:", response);
-
     } catch (error) {
-      console.log(error)
+      console.log("Login Error:", error);
     }
   };
 
@@ -22,7 +21,7 @@ export default function Login() {
         flex: 1,
         padding: 20,
         backgroundColor: "white",
-        justifyContent:"center"
+        justifyContent: "center",
       }}
     >
       <Text style={{ fontSize: 28, fontWeight: "bold", marginBottom: 20 }}>
@@ -41,7 +40,6 @@ export default function Login() {
           padding: 12,
           borderRadius: 6,
           marginBottom: 12,
-
         }}
       />
 
@@ -68,9 +66,7 @@ export default function Login() {
           alignItems: "center",
         }}
       >
-        <Text style={{ color: "white", fontWeight: "bold" }}>
-          Sign In
-        </Text>
+        <Text style={{ color: "white", fontWeight: "bold" }}>Sign In</Text>
       </Pressable>
     </View>
   );

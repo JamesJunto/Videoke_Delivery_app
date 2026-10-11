@@ -1,18 +1,14 @@
-import { useEffect, useState, useState } from "react";
-import { getAuth } from '../services/authService'
+import { getAuth } from "../services/authService";
+import { useState } from "react";
+const useAuth = () => {
+  const [credentials, setCredentials] = useState(null);
 
-const useAuth = async () => {
-  const [credentials, setCredentials] = useState()
+  const handleLogin = async (email, password) => {
+    const data = await getAuth(email, password);
+    setCredentials(data);
+    return data;
+  };
 
-  useEffect(() => {
-    const fetchCredentials = async () => {
-        const data = await getAuth();
-        setCredentials(data);
-    };
-    fetchCredentials()
-
-  }, [])
-
-  return credentials;
-}
+  return { credentials, handleLogin };
+};
 export default useAuth

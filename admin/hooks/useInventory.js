@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  getInventory,
-  addInventoryItem,
-} from "../services/inventoryServices";
+import {getInventory, addInventoryItem,} from "../services/inventoryServices";
 
 const useInventory = () => {
   const [items, setItem] = useState([]);

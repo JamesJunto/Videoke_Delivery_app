@@ -6,10 +6,9 @@ export const getAuth = async (email, password) => {
       email,
       password
     });
-
     return response.data;
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("Fetching error:", error);
     throw error;
   }
 };
