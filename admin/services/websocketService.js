@@ -3,7 +3,7 @@ let socket = null;
 export const connectWebSocket = () => {
   if (socket) return;
 
-  socket = new WebSocket("ws://192.168.254.110:3000");
+  socket = new WebSocket("ws://192.168.254.100:3000");
 
   //wait for successful connection
   socket.onopen = () => {
