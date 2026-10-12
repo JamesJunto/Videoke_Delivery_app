@@ -1,4 +1,5 @@
 import { db } from "../db.js";
+import bcrypt from "bcrypt";
 
 export const getCustomerAccount = async (email) => {
   const [result] = await db.promise().query(
@@ -9,19 +10,14 @@ export const getCustomerAccount = async (email) => {
   return result[0] || null;
 };
 
-
-export const AddAccount = async (
-  first_name,
-  last_name,
-  phone,
-  address,
-  email,
-  password
-) => {
+export const AddAccount = async (first_name,last_name, phone,address, email,password) => {
   const connection = db.promise();
 
   try {
+
     await connection.beginTransaction();
+
+    const hashPassword = await bcrypt.hash(password, 10)
 
     const [customerResult] = await connection.query(
       `INSERT INTO customers
@@ -36,12 +32,12 @@ export const AddAccount = async (
       `INSERT INTO customer_acc
        (customer_id, email, password_hash)
        VALUES (?, ?, ?)`,
-      [customer_id, email, password]
+      [customer_id, email, hashPassword]
     );
 
     await connection.commit();
-
     return customer_id;
+
   } catch (error) {
     await connection.rollback();
     console.error("AddAccount database error:", error);
