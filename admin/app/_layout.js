@@ -2,15 +2,13 @@ import { Slot } from "expo-router";
 import { View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { usePathname } from "expo-router";
-import { useEffect } from "react";
 import BottomNavigation from "../components/BottomNavigation";
 import Header from "../components/Header";
 
 export default function Layout() {
   const pathname = usePathname();
 
-  const isValidScreen = pathname === "/screens/LoginScreen" || "/screens/RegisterScreen";
-
+  const isValidScreen = pathname === "/screens/LoginScreen" || pathname=== "/screens/RegisterScreen";
 
   return (
     <SafeAreaProvider>

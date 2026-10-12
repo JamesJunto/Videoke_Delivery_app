@@ -12,13 +12,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use(rateLimiter)
-
 app.use("/api/customers", customerRoute);
 app.use("/api/inventory", inventoryRoute);
 app.use("/api/orders", ordersRoute);
-app.use("/api/auth", authRoutes);
-
+app.use("/api/auth", rateLimiter, authRoutes);
 
 app.listen(3000, () => {
   console.log(" Server running on port 3000");

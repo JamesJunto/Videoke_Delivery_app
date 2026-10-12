@@ -18,8 +18,8 @@ export default function Login() {
 
   const handleSignIn = async () => {
     try {
-      const response = await handleLogin(email, password);
-      console.log("Login user:", response);
+      await handleLogin(email, password);
+      router.replace("/screens/DashboardScreen")
     } catch (error) {
       console.log("Login Error:", error);
     }

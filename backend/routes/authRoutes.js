@@ -34,7 +34,6 @@ router.post("/login", async (req, res) => {
 
 
 router.post("/register", async (req, res) => {
-   console.log("REGISTER REQUEST RECEIVED");
 
   const { first_name, last_name, phone, address, email, password } = req.body;
 
