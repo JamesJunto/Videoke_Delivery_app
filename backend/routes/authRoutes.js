@@ -3,16 +3,17 @@ import { AddAccount, getCustomerAccount } from "../services/authService.js";
 
 const router = express.Router();
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
+
   const { email, password } = req.body;
 
-  getCustomerAccount(email, (err, account) => {
-    if (err) {
-      return res.status(500).json({ message: "Server error" });
-    }
+  try {
+    const account = await getCustomerAccount(email, password);
 
     if (!account) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({
+        message: "Invalid credentials",
+      });
     }
 
     return res.status(200).json({
@@ -22,8 +23,15 @@ router.post("/login", (req, res) => {
         email: account.email,
       },
     });
-  });
+
+  } catch (error) {
+
+    return res.status(500).json({
+      message: "Server error",
+    });
+  }
 });
+
 
 router.post("/register", async (req, res) => {
    console.log("REGISTER REQUEST RECEIVED");

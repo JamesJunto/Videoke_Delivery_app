@@ -1,8 +1,17 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { useState } from "react";
+import { useRouter } from "expo-router";
 import useAuth from "../../hooks/useAuth";
 
 const Register = () => {
+  const router = useRouter();
+
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -10,17 +19,19 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { handleRegister } = useAuth();
+  const { handleRegister, loading } = useAuth();
+
 
   const handleSignUp = async () => {
     try {
-      const response = await handleRegister(first_name,last_name,phone,address, email, password);
+      await handleRegister(first_name,last_name,phone,address, email,password );
 
-      console.log("SignUp user:", response);
+      router.replace("/screens/LoginScreen");
     } catch (error) {
       console.log("SignUp Error:", error);
     }
   };
+
 
   return (
     <View className="flex-1 justify-center bg-white px-6">
@@ -36,6 +47,7 @@ const Register = () => {
         placeholder="First Name"
         value={first_name}
         onChangeText={setFirstName}
+        editable={!loading}
         className="mb-4 rounded-sm border border-gray-300 p-3"
       />
 
@@ -43,6 +55,7 @@ const Register = () => {
         placeholder="Last Name"
         value={last_name}
         onChangeText={setLastName}
+        editable={!loading}
         className="mb-4 rounded-sm border border-gray-300 p-3"
       />
 
@@ -51,6 +64,7 @@ const Register = () => {
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
+        editable={!loading}
         className="mb-4 rounded-sm border border-gray-300 p-3"
       />
 
@@ -58,6 +72,7 @@ const Register = () => {
         placeholder="Address"
         value={address}
         onChangeText={setAddress}
+        editable={!loading}
         className="mb-4 rounded-sm border border-gray-300 p-3"
       />
 
@@ -67,6 +82,7 @@ const Register = () => {
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        editable={!loading}
         className="mb-4 rounded-sm border border-gray-300 p-3"
       />
 
@@ -75,14 +91,23 @@ const Register = () => {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        editable={!loading}
         className="mb-6 rounded-sm border border-gray-300 p-3"
       />
 
       <TouchableOpacity
         onPress={handleSignUp}
+        disabled={loading}
         className="items-center rounded-md bg-[#C1272D] p-3"
+        style={{ opacity: loading ? 0.7 : 1 }}
       >
-        <Text className="font-bold text-white">Sign Up</Text>
+        {loading ? (
+          <ActivityIndicator color="white" />
+        ) : (
+          <Text className="font-bold text-white">
+            Sign Up
+          </Text>
+        )}
       </TouchableOpacity>
 
       <View className="mt-6 flex-row justify-center">
@@ -90,7 +115,10 @@ const Register = () => {
           Already have an account?{" "}
         </Text>
 
-        <TouchableOpacity>
+        <TouchableOpacity
+          disabled={loading}
+          onPress={() => router.push("/login")}
+        >
           <Text className="font-bold text-[#C1272D]">
             Log In
           </Text>

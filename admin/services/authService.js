@@ -2,13 +2,10 @@ import { api } from "./api.js";
 
 export const getAuth = async (email, password) => {
   try {
-    const response = await api.post("/auth/login", {
-      email,
-      password
-    });
+    const response = await api.post("/auth/login", {email,password });
     return response.data;
   } catch (error) {
-    console.error("Fetching error:", error);
+     console.log("Res:", error.response?.data);
     throw error;
   }
 };

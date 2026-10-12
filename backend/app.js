@@ -20,12 +20,16 @@ app.use("/api/orders", ordersRoute);
 app.use("/api/auth", authRoutes);
 
 
-const server = app.listen(3000, () => {
+app.listen(3000, () => {
   console.log(" Server running on port 3000");
 });
 
-const wss = new WebSocketServer({ server });
 
+
+
+//const wss = new WebSocketServer({ server });
+
+/*
 wss.on("connection", (socket) => {
   console.log("Client connected");
 
@@ -40,3 +44,5 @@ wss.on("connection", (socket) => {
     });
   });
 });
+
+*/

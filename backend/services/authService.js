@@ -1,13 +1,26 @@
 import { db } from "../db.js";
 import bcrypt from "bcrypt";
 
-export const getCustomerAccount = async (email) => {
-  const [result] = await db.promise().query(
+export const getCustomerAccount = async (email, password) => {
+  const [rows] = await db.promise().query(
     "SELECT * FROM customer_acc WHERE email = ?",
     [email]
   );
 
-  return result[0] || null;
+  if (rows.length === 0) {
+    return null
+  }
+
+  const account = rows[0]
+
+  const isMatch = await bcrypt.compare(password, account.password_hash)
+
+  if (!isMatch) {
+   return null
+  }
+
+  return account
+
 };
 
 export const AddAccount = async (first_name,last_name, phone,address, email,password) => {

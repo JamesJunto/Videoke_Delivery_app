@@ -1,11 +1,17 @@
 import { useState } from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { useRouter } from "expo-router";
 import useAuth from "../../hooks/useAuth";
 
 export default function Login() {
   const router = useRouter();
-  const { handleLogin } = useAuth();
+  const { handleLogin, loading } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +34,13 @@ export default function Login() {
         justifyContent: "center",
       }}
     >
-      <Text style={{ fontSize: 28, fontWeight: "bold", marginBottom: 20 }}>
+      <Text
+        style={{
+          fontSize: 28,
+          fontWeight: "bold",
+          marginBottom: 20,
+        }}
+      >
         Sign In
       </Text>
 
@@ -38,6 +50,7 @@ export default function Login() {
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        editable={!loading}
         style={{
           borderWidth: 1,
           borderColor: "#ddd",
@@ -52,6 +65,7 @@ export default function Login() {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        editable={!loading}
         style={{
           borderWidth: 1,
           borderColor: "#ddd",
@@ -63,16 +77,27 @@ export default function Login() {
 
       <Pressable
         onPress={handleSignIn}
+        disabled={loading}
         style={{
           backgroundColor: "#C1272D",
           padding: 14,
           borderRadius: 6,
           alignItems: "center",
+          opacity: loading ? 0.7 : 1,
         }}
       >
-        <Text style={{ color: "white", fontWeight: "bold" }}>
-          Sign In
-        </Text>
+        {loading ? (
+          <ActivityIndicator color="white" />
+        ) : (
+          <Text
+            style={{
+              color: "white",
+              fontWeight: "bold",
+            }}
+          >
+            Sign In
+          </Text>
+        )}
       </Pressable>
 
       <View
@@ -86,7 +111,10 @@ export default function Login() {
           Don't have an account?{" "}
         </Text>
 
-        <Pressable onPress={() => router.push("/screens/RegisterScreen")}>
+        <Pressable
+          disabled={loading}
+          onPress={() => router.push("/screens/RegisterScreen")}
+        >
           <Text style={{ color: "#C1272D", fontWeight: "bold" }}>
             Register
           </Text>
