@@ -1,4 +1,4 @@
-import { getAuth } from "../services/authService";
+import { getAuth, registerAccount } from "../services/authService";
 import { useState } from "react";
 const useAuth = () => {
   const [credentials, setCredentials] = useState(null);
@@ -9,6 +9,11 @@ const useAuth = () => {
     return data;
   };
 
-  return { credentials, handleLogin };
+  const handleRegister = async (first_name, last_name, phone, address, email, password) => {
+    const res = await registerAccount(first_name, last_name, phone, address, email, password);
+    return res
+  };
+
+  return { credentials, handleLogin, handleRegister };
 };
-export default useAuth
+export default useAuth;

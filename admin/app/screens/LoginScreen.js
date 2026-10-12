@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { View, Text, TextInput, Pressable } from "react-native";
+import { useRouter } from "expo-router";
 import useAuth from "../../hooks/useAuth";
+
 export default function Login() {
+  const router = useRouter();
   const { handleLogin } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -66,8 +70,28 @@ export default function Login() {
           alignItems: "center",
         }}
       >
-        <Text style={{ color: "white", fontWeight: "bold" }}>Sign In</Text>
+        <Text style={{ color: "white", fontWeight: "bold" }}>
+          Sign In
+        </Text>
       </Pressable>
+
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          marginTop: 20,
+        }}
+      >
+        <Text style={{ color: "#666" }}>
+          Don't have an account?{" "}
+        </Text>
+
+        <Pressable onPress={() => router.push("/screens/RegisterScreen")}>
+          <Text style={{ color: "#C1272D", fontWeight: "bold" }}>
+            Register
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 }

@@ -10,7 +10,7 @@ import Header from "../components/Header";
 export default function Layout() {
   const pathname = usePathname();
 
-  const isLoginScreen = pathname === "/screens/LoginScreen";
+  const isValidScreen = pathname === "/screens/LoginScreen" || "/screens/RegisterScreen";
 
   useEffect(() => {
     connectWebSocket();
@@ -19,13 +19,13 @@ export default function Layout() {
   return (
     <SafeAreaProvider>
       <SafeAreaView className="flex-1 bg-gray-50">
-        {!isLoginScreen && <Header />}
+        {!isValidScreen && <Header />}
 
         <View className="flex-1 ">
           <Slot />
         </View>
 
-        {!isLoginScreen && <BottomNavigation />}
+        {!isValidScreen && <BottomNavigation />}
     </SafeAreaView>
     </SafeAreaProvider>
   );

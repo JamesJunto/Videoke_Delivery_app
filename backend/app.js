@@ -17,13 +17,13 @@ app.use(rateLimiter)
 app.use("/api/customers", customerRoute);
 app.use("/api/inventory", inventoryRoute);
 app.use("/api/orders", ordersRoute);
-app.use("/api/login", authRoutes)
+app.use("/api/auth", authRoutes);
+
 
 const server = app.listen(3000, () => {
   console.log(" Server running on port 3000");
 });
 
-//WEBSOCKET SERVER
 const wss = new WebSocketServer({ server });
 
 wss.on("connection", (socket) => {
