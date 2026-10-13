@@ -2,10 +2,12 @@ import { api } from './api';
 
 export const getInventory = async () => {
   try {
+   // const token = localStorage.getItem('accessToken');
+
     const response = await api.get('/inventory');
     return response.data;
   }
-    catch (error) {
+  catch (error) {
     console.error('Error fetching inventory:', error);
     throw error;
   }

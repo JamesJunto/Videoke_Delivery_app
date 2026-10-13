@@ -2,12 +2,21 @@ import { Text, View } from "react-native";
 import useInventory from "../../hooks/useInventory";
 
 const InventoryItems = ({ filteredStatus }) => {
-  const { items } = useInventory();
+  const { items, loading, error, handleAddInventory } = useInventory();
 
   const filteredItems =
     filteredStatus === "All"
     ? items
       :items.filter((item) => item.status === filteredStatus);
+
+  if (loading) {
+     return <Text>Loading...</Text>;
+   }
+
+   if (error) {
+     return <Text>Error: {error}</Text>;
+   }
+
 
   return (
     <>

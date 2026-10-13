@@ -1,16 +1,16 @@
-import express from 'express'
-import { getCustomer } from '../services/customerServices.js'
+import express from "express";
+import { getCustomer } from "../services/customerServices.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/', (req, res) => {
-  getCustomer((err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("Error fetching customers");
-    }
-    res.json(result);
- })
-})
+router.get("/", async (req, res) => {
+  try {
+    const customers = await getCustomer();
+    res.json(customers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error fetching customers");
+  }
+});
 
-export default router
+export default router;

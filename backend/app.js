@@ -1,9 +1,11 @@
+import 'dotenv/config';
 import express from "express";
 import customerRoute from "./routes/customerRoute.js";
 import inventoryRoute from "./routes/inventoryRoute.js";
 import ordersRoute from "./routes/ordersRoute.js"
 import authRoutes from "./routes/authRoutes.js"
 import { rateLimiter } from "./middleware/rateLimit.js";
+import { authMiddleware } from './middleware/auth.js';
 import cors from "cors";
 import { WebSocketServer, WebSocket } from "ws";
 
@@ -12,17 +14,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/customers", customerRoute);
-app.use("/api/inventory", inventoryRoute);
-app.use("/api/orders", ordersRoute);
 app.use("/api/auth", rateLimiter, authRoutes);
+app.use("/api/customers", authMiddleware, customerRoute);
+app.use("/api/inventory", authMiddleware, inventoryRoute);
+app.use("/api/orders", authMiddleware, ordersRoute);
 
 app.listen(3000, () => {
   console.log(" Server running on port 3000");
 });
-
-
-
 
 //const wss = new WebSocketServer({ server });
 

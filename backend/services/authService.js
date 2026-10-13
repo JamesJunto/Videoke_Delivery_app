@@ -12,7 +12,6 @@ export const getCustomerAccount = async (email, password) => {
   }
 
   const account = rows[0]
-
   const isMatch = await bcrypt.compare(password, account.password_hash)
 
   if (!isMatch) {
