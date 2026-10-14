@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 
 export const authMiddleware = (req, res, next) => {
+  //dapat naa ni sa env file ang access token.
   const ACCESS_TOKEN_KEY = 'b4e8d1f7a3c6b9e2d5f8a1c4e7b3d6f9a2c5e8b1d4f7a3c6b9e2d5f8a1c4e7b3';
 
   const authHeader = req.headers["authorization"];
