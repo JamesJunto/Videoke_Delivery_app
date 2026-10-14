@@ -1,3 +1,4 @@
+/*
 let socket = null;
 
 export const connectWebSocket = () => {
@@ -26,3 +27,4 @@ export const connectWebSocket = () => {
   };
 };
 export default connectWebSocket
+*/

@@ -13,9 +13,6 @@ export default function Layout() {
 
   const isLoginScreen = pathname === "/screens/LoginScreen";
 
-  useEffect(() => {
-    connectWebSocket();
-  }, []);
 
   return (
     <CartProvider>

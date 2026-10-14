@@ -22,9 +22,10 @@ const CartModal = ({ visible, onClose }) => {
 
   const handleCheckOut = async () => {
     try {
+      //hard coded pang customer_id
       const order = {
         order_id: 222,
-        customer_id: 1,
+        customer_id: 35,
         items: cart,
         total: total,
       };

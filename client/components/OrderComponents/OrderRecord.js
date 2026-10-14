@@ -1,40 +1,19 @@
-
 import { Text, View } from "react-native";
 import useOrders from "../../hooks/useOrders";
 
 const OrderRecord = () => {
-  const orders = useOrders()
+  const { orders } = useOrders();
 
   return (
     <>
       {orders.map((order) => (
         <View
-          key={order.id}
+          key={order.order_id}
           className="rounded-[12px] border border-gray-200 bg-white p-4"
         >
-          <View className="flex-row items-center justify-between">
-            <Text className="text-[14px] font-semibold text-gray-500">
-              Order #{order.order_id}
-            </Text>
-
-            <View
-              className={`rounded-full px-3 py-1 ${
-                order.status === "Ongoing"
-                  ? "bg-red-100"
-                  : "bg-gray-100"
-              }`}
-            >
-              <Text
-                className={`text-[12px] font-semibold ${
-                  order.status === "Ongoing"
-                    ? "text-[#C1272D]"
-                    : "text-gray-600"
-                }`}
-              >
-                {order.status}
-              </Text>
-            </View>
-          </View>
+          <Text className="text-[14px] font-semibold text-gray-500">
+            Order #{order.order_id}
+          </Text>
 
           <Text className="mt-4 text-[18px] font-bold text-gray-900">
             {order.product_name}
@@ -49,7 +28,6 @@ const OrderRecord = () => {
               <Text className="text-[12px] text-gray-400">
                 Order Date
               </Text>
-
               <Text className="mt-1 text-[14px] text-gray-700">
                 {order.date}
               </Text>
@@ -59,7 +37,6 @@ const OrderRecord = () => {
               <Text className="text-[12px] text-gray-400">
                 Total
               </Text>
-
               <Text className="mt-1 text-[18px] font-bold text-[#C1272D]">
                 ₱{order.total}
               </Text>

@@ -12,9 +12,13 @@ export const addOrder = async (order) => {
 export const getOrders = async () => {
   try {
     const response = await api.get('/orders');
+
+    console.log('Orders response:', response.data);
+    console.log('Is array:', Array.isArray(response.data));
+
     return response.data;
   } catch (error) {
     console.error('Error fetching orders:', error);
     throw error;
   }
-}
+};
