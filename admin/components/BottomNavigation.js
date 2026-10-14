@@ -6,92 +6,110 @@ const BottomNavigation = () => {
   const pathname = usePathname();
 
   return (
-    <View className="flex-row border-t border-gray-200 bg-white py-2">
+    <View className="flex-row border-t border-[#E6EFE7] bg-[#F7FBF8] py-2">
       <Pressable
-        className="flex-1 items-center justify-center"
+        className="flex-1 items-center justify-center px-1"
         onPress={() => router.push("/screens/DashboardScreen")}
       >
         <Ionicons
           name="grid-outline"
-          size={21}
-          color={
-            pathname === "/screens/DashboardScreen" ? "#B22222" : "#000000"
-          }
+          size={20}
+          color={pathname === "/screens/DashboardScreen" ? "#1F5A4B" : "#000000"}
         />
         <Text
-          className={`mt-0.5 text-[14px] font-medium ${
+          numberOfLines={1}
+          className={`mt-0.5 text-[11px] font-medium ${
             pathname === "/screens/DashboardScreen"
-              ? "text-[#B22222]"
-              : "text-black-500"
+              ? "text-[#1F5A4B]"
+              : "text-black"
           }`}
         >
-          Dashboard
+          Overview
         </Text>
       </Pressable>
 
       <Pressable
-        className="flex-1 items-center justify-center"
-        onPress={() => router.push("/screens/CustomersScreen")}
-      >
-        <Ionicons
-          name="people-outline"
-          size={21}
-          color={
-            pathname === "/screens/CustomersScreen" ? "#B22222" : "#000000"
-          }
-        />
-        <Text
-          className={`mt-0.5 text-[14px] font-medium ${
-            pathname === "/screens/CustomersScreen"
-              ? "text-[#B22222]"
-              : "text-black-500"
-          }`}
-        >
-          Customers
-        </Text>
-      </Pressable>
-
-      <Pressable
-        className="flex-1 items-center justify-center"
+        className="flex-1 items-center justify-center px-1"
         onPress={() => router.push("/screens/InventoryScreen")}
       >
         <Ionicons
           name="cube-outline"
-          size={21}
-          color={
-            pathname === "/screens/InventoryScreen" ? "#B22222" : "#000000"
-          }
+          size={20}
+          color={pathname === "/screens/InventoryScreen" ? "#1F5A4B" : "#000000"}
         />
         <Text
-          className={`mt-0.5 text-[14px] font-medium ${
+          numberOfLines={1}
+          className={`mt-0.5 text-[11px] font-medium ${
             pathname === "/screens/InventoryScreen"
-              ? "text-[#B22222]"
-              : "text-black-500"
+              ? "text-[#1F5A4B]"
+              : "text-black"
           }`}
         >
-          Inventory
+          Packages
         </Text>
       </Pressable>
 
       <Pressable
-        className="flex-1 items-center justify-center"
+        className="flex-1 items-center justify-center px-1"
+        onPress={() => router.push("/screens/OrdersScreen")}
+      >
+        <Ionicons
+          name="receipt-outline"
+          size={20}
+          color={pathname === "/screens/OrdersScreen" ? "#1F5A4B" : "#000000"}
+        />
+        <Text
+          numberOfLines={1}
+          className={`mt-0.5 text-[11px] font-medium ${
+            pathname === "/screens/OrdersScreen"
+              ? "text-[#1F5A4B]"
+              : "text-black"
+          }`}
+        >
+          Orders
+        </Text>
+      </Pressable>
+
+      <Pressable
+        className="flex-1 items-center justify-center px-1"
         onPress={() => router.push("/screens/DeliveriesScreen")}
       >
         <Ionicons
           name="bicycle-outline"
-          size={23}
-          color={
-            pathname === "/screens/DeliveriesScreen" ? "#B22222" : "#000000"
-          }
+          size={20}
+          color={pathname === "/screens/DeliveriesScreen" ? "#1F5A4B" : "#000000"}
         />
         <Text
-          className={`mt-0.5 text-[14px] font-medium ${
+          numberOfLines={1}
+          className={`mt-0.5 text-[11px] font-medium ${
             pathname === "/screens/DeliveriesScreen"
-              ? "text-[#B22222]"
-              : "text-black-500"
+              ? "text-[#1F5A4B]"
+              : "text-black"
           }`}
         >
           Deliveries
+        </Text>
+      </Pressable>
+
+      {/* Customers */}
+      <Pressable
+        className="flex-1 items-center justify-center px-1"
+        onPress={() => router.push("/screens/CustomersScreen")}
+      >
+        <Ionicons
+          name="people-outline"
+          size={20}
+          color={pathname === "/screens/CustomersScreen" ? "#1F5A4B" : "#000000"}
+        />
+        <Text
+          numberOfLines={1}
+          className={`mt-0.5 text-[11px] font-medium ${
+            pathname === "/screens/CustomersScreen"
+              ? "text-[#1F5A4B]"
+              : "text-black"
+          }`}
+        >
+          Customers
         </Text>
       </Pressable>
     </View>

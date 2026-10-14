@@ -12,7 +12,7 @@ export default function Layout() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="flex-1 bg-gray-50">
+      <SafeAreaView className="flex-1 bg-[#F7FBF8]">
         {!isValidScreen && <Header />}
 
         <View className="flex-1 ">
