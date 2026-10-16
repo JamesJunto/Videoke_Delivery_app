@@ -13,6 +13,7 @@ CREATE TABLE product (
   description    TEXT,
   price          DECIMAL(10, 2) NOT NULL,
   stock          INT DEFAULT 0,
+  status         VARCHAR(50) NOT NULL DEFAULT 'available';
   created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
