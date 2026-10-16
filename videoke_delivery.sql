@@ -58,3 +58,9 @@ CREATE TABLE payments (
   paid_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
+
+ALTER TABLE product
+MODIFY COLUMN product_name VARCHAR(100)
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+  
+  ALTER TABLE product ADD UNIQUE (product_name);
