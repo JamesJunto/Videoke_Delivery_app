@@ -68,3 +68,5 @@ MODIFY COLUMN product_name VARCHAR(100)
 
 ALTER TABLE customer
 ADD COLUMN name VARCHAR(200) AFTER address;
+
+DROP TABLE deliveries;
