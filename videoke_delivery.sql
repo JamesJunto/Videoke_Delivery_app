@@ -64,3 +64,7 @@ MODIFY COLUMN product_name VARCHAR(100)
   CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
   
   ALTER TABLE product ADD UNIQUE (product_name);
+
+
+ALTER TABLE customer
+ADD COLUMN name VARCHAR(200) AFTER address;
