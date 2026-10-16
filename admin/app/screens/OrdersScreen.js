@@ -2,22 +2,24 @@ import { useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import OrdersItems from "../../components/OrdersComponents/ordersItems";
-const filters = [
+import AddOrderModal from "../../components/OrdersComponents/AddOrderModal";
 
+const filters = [
   { label: "All", value: "All" },
-  { label: "Pending ", value: "pending" },
-  { label: "Active ", value: "active" },
+  { label: "Pending", value: "pending" },
+  { label: "Active", value: "active" },
   { label: "Closed", value: "closed" },
 ];
 
 const OrdersScreen = () => {
   const [activeFilter, setActiveFilter] = useState("All");
   const [search, setSearch] = useState("");
+  const [showAddModal, setShowAddModal] = useState(false);
 
   return (
     <View className="flex-1 bg-[#F7FBF8]">
       <View className="bg-[#F7FBF8] px-3 pt-3 pb-2">
-        <View className="mt-3 flex-row items-center rounded-[10px] bg-white border border-[#E6EFE7] px-4 py-3">
+        <View className="mt-3 flex-row items-center rounded-[50px] bg-[#FFFDF9] border border-[#E6EFE7] px-4 py-3">
           <Ionicons name="search-outline" size={18} color="#6B8A84" />
           <TextInput
             value={search}
@@ -57,9 +59,7 @@ const OrdersScreen = () => {
             Recent orders
           </Text>
           <Pressable className="flex-row items-center">
-            <Text className="text-[12px] text-[#6B8A84]">
-              Newest first
-            </Text>
+            <Text className="text-[12px] text-[#6B8A84]">Newest first</Text>
             <Ionicons
               name="filter-outline"
               size={14}
@@ -77,6 +77,25 @@ const OrdersScreen = () => {
       >
         <OrdersItems filteredStatus={activeFilter} searchQuery={search} />
       </ScrollView>
+
+      <Pressable
+        onPress={() => setShowAddModal(true)}
+        className="absolute bottom-6 right-5 h-14 w-14 items-center justify-center rounded-full bg-[#1F5A4B]"
+        style={{
+          shadowColor: "#1F5A4B",
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          elevation: 6,
+        }}
+      >
+        <Ionicons name="add" size={28} color="#FFFDF9" />
+      </Pressable>
+
+      <AddOrderModal
+        visible={showAddModal}
+        onClose={() => setShowAddModal(false)}
+      />
     </View>
   );
 };

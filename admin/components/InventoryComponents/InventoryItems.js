@@ -3,20 +3,16 @@ import useInventory from "../../hooks/useInventory";
 import { useState } from "react";
 import ItemsEditModal from "./itemsEditModal";
 
-const InventoryItems = ({ filteredStatus, searchQuery = "" }) => {
+const InventoryItems = ({ searchQuery = "" }) => {
   const { items, loading, error, handleAddInventory } = useInventory();
   const [selectedItem, setSelectedItem] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
   const filteredItems = items.filter((item) => {
-    const statusMatch =
-      filteredStatus === "All" || item.status === filteredStatus;
-
     const searchMatch =
       searchQuery.trim() === "" ||
       item.product_name.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return statusMatch && searchMatch;
+    return  searchMatch;
   });
 
   if (loading) {

@@ -25,7 +25,7 @@ const PendingOrders = () => {
       {PendingOrders.map((orders, index) => {
         return (
           <View key={orders.id}>
-            {index !== 0 && <View className="h-[1px] bg-gray-200 mx-4" />}
+            {index !== 0 && <View className="h-[1px] bg-[#E6EFE7] mx-4" />}
 
             <View className="p-4 flex-row justify-between items-center">
               <View className="flex-1 pr-2">

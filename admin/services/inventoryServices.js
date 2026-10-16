@@ -1,24 +1,23 @@
-import { api } from './api';
+import { api } from "./api";
 
 export const getInventory = async () => {
   try {
-   // const token = localStorage.getItem('accessToken');
 
-    const response = await api.get('/inventory');
+    const response = await api.get("/inventory");
     return response.data;
-  }
-  catch (error) {
-    console.error('Error fetching inventory:', error);
+
+  } catch (error) {
+    console.error("Error fetching inventory:", error);
     throw error;
   }
 };
 
 export const addInventoryItem = async (item) => {
   try {
-    const response = await api.post('/inventory', item);
+    const response = await api.post("/inventory", item);
     return response.data;
   } catch (error) {
-    console.error('Error adding inventory item:', error);
+    console.error("Error adding inventory item:", error);
     throw error;
   }
 };

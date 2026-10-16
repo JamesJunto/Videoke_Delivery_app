@@ -70,48 +70,7 @@ const BottomNavigation = () => {
         </Text>
       </Pressable>
 
-      <Pressable
-        className="flex-1 items-center justify-center px-1"
-        onPress={() => router.push("/screens/DeliveriesScreen")}
-      >
-        <Ionicons
-          name="bicycle-outline"
-          size={20}
-          color={pathname === "/screens/DeliveriesScreen" ? "#1F5A4B" : "#000000"}
-        />
-        <Text
-          numberOfLines={1}
-          className={`mt-0.5 text-[11px] font-medium ${
-            pathname === "/screens/DeliveriesScreen"
-              ? "text-[#1F5A4B]"
-              : "text-black"
-          }`}
-        >
-          Deliveries
-        </Text>
-      </Pressable>
 
-      {/* Customers */}
-      <Pressable
-        className="flex-1 items-center justify-center px-1"
-        onPress={() => router.push("/screens/CustomersScreen")}
-      >
-        <Ionicons
-          name="people-outline"
-          size={20}
-          color={pathname === "/screens/CustomersScreen" ? "#1F5A4B" : "#000000"}
-        />
-        <Text
-          numberOfLines={1}
-          className={`mt-0.5 text-[11px] font-medium ${
-            pathname === "/screens/CustomersScreen"
-              ? "text-[#1F5A4B]"
-              : "text-black"
-          }`}
-        >
-          Customers
-        </Text>
-      </Pressable>
     </View>
   );
 };

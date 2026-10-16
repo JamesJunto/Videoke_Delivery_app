@@ -18,10 +18,10 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
    console.log('Request body:', req.body);
-  const { productName, category, quantity, price, supplier } = req.body;
+  const { product_name, description, price,stock } = req.body;
 
   try {
-    await createInventory(productName, category, quantity, price, supplier);
+    await createInventory( product_name, description,price,stock );
     res.status(201).send("Order created successfully");
   } catch (error) {
     console.error(error);

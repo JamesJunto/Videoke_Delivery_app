@@ -11,11 +11,6 @@ import useAuth from "../../hooks/useAuth";
 
 const Register = () => {
   const router = useRouter();
-
-  const [first_name, setFirstName] = useState("");
-  const [last_name, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -24,7 +19,7 @@ const Register = () => {
 
   const handleSignUp = async () => {
     try {
-      await handleRegister(first_name,last_name,phone,address, email,password );
+      await handleRegister( email,password );
 
       router.replace("/screens/LoginScreen");
     } catch (error) {
@@ -42,39 +37,6 @@ const Register = () => {
       <Text className="mb-8 text-gray-500">
         Sign up to get started.
       </Text>
-
-      <TextInput
-        placeholder="First Name"
-        value={first_name}
-        onChangeText={setFirstName}
-        editable={!loading}
-        className="mb-4 rounded-sm border border-gray-300 p-3"
-      />
-
-      <TextInput
-        placeholder="Last Name"
-        value={last_name}
-        onChangeText={setLastName}
-        editable={!loading}
-        className="mb-4 rounded-sm border border-gray-300 p-3"
-      />
-
-      <TextInput
-        placeholder="Phone Number"
-        value={phone}
-        onChangeText={setPhone}
-        keyboardType="phone-pad"
-        editable={!loading}
-        className="mb-4 rounded-sm border border-gray-300 p-3"
-      />
-
-      <TextInput
-        placeholder="Address"
-        value={address}
-        onChangeText={setAddress}
-        editable={!loading}
-        className="mb-4 rounded-sm border border-gray-300 p-3"
-      />
 
       <TextInput
         placeholder="Email"

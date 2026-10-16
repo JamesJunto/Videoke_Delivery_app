@@ -35,14 +35,12 @@ const DashboardScreen = () => {
         <View className="flex-col justify-between mt-3 w-full gap-3">
           <PendingOrders />
         </View>
-
       </View>
 
-
-      <View className="mt-4  w-full">
+      <View className="mt-4 w-full">
         <View className="flex-row items-center justify-between">
           <Text className="text-[18px] font-medium text-[#1F5A4B]">
-            Upcoming Deliveries
+            Upcoming Orders
           </Text>
 
           <Pressable
@@ -61,9 +59,7 @@ const DashboardScreen = () => {
         <View className="flex-col justify-between mt-3 w-full gap-3">
           <UpcomingDeliveries />
         </View>
-
       </View>
-
 
     </ScrollView>
   );

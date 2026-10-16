@@ -38,10 +38,10 @@ router.post("/login", async (req, res) => {
 
 router.post("/register", async (req, res) => {
 
-  const { first_name, last_name, phone, address, email, password } = req.body;
+  const {email, password } = req.body;
 
   try {
-    await AddAccount(first_name, last_name, phone, address, email, password);
+    await AddAccount( email, password);
 
     return res.status(201).json({
       message: "Registration successful",

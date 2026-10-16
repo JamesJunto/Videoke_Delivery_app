@@ -2,16 +2,18 @@ import { db } from "../db.js";
 
 export const getInventory = async () => {
   const [rows] = await db.promise().query(
-    "SELECT * FROM inventory"
+    "SELECT * FROM product"
   );
 
   return rows;
 };
 
-export const createInventory = async (productName, category, price, quantity, supplier) => {
+export const createInventory = async (product_name, description, price, stock) => {
   const [result] = await db.promise().query(
-    "INSERT INTO inventory (product_name, category, quantity, price, supplier) VALUES (?, ?, ?, ?, ?)",
-    [productName, category, quantity, price, supplier]
+    `INSERT INTO product (product_name, description, price, stock)
+     VALUES (?, ?, ?, ?) AS new
+     ON DUPLICATE KEY UPDATE stock = product.stock + new.stock`,
+    [product_name, description, price, stock]
   );
 
   return result;

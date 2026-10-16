@@ -22,7 +22,7 @@ export const getCustomerAccount = async (email, password) => {
 
 };
 
-export const AddAccount = async (first_name,last_name, phone,address, email,password) => {
+export const AddAccount = async (email,password) => {
   const connection = db.promise();
 
   try {
@@ -31,20 +31,11 @@ export const AddAccount = async (first_name,last_name, phone,address, email,pass
 
     const hashPassword = await bcrypt.hash(password, 10)
 
-    const [customerResult] = await connection.query(
-      `INSERT INTO customers
-       (first_name, last_name, phone, address)
-       VALUES (?, ?, ?, ?)`,
-      [first_name, last_name, phone, address]
-    );
-
-    const customer_id = customerResult.insertId;
-
     await connection.query(
       `INSERT INTO customer_acc
-       (customer_id, email, password_hash)
-       VALUES (?, ?, ?)`,
-      [customer_id, email, hashPassword]
+       (email, password_hash)
+       VALUES (?, ?)`,
+      [ email, hashPassword]
     );
 
     await connection.commit();

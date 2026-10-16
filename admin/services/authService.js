@@ -14,9 +14,9 @@ export const getAuth = async (email, password) => {
   }
 };
 
-export const registerAccount = async (first_name, last_name, phone, address, email, password) => {
+export const registerAccount = async (email, password) => {
   try {
-    const response = await api.post("/auth/register", {first_name, last_name, phone, address, email, password});
+    const response = await api.post("/auth/register", {email, password});
     return response.data;
 
   } catch (error) {

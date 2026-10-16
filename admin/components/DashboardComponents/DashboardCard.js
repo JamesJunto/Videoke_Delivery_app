@@ -4,28 +4,28 @@ import { Text, View } from "react-native";
 const DashboardCards = () => {
   const DashboardData = [
     {
-      title: "Active Rentals",
-      value: 22,
-      icon: "people-outline",
-      description: "Currently rented out",
+      title: "Pending Orders",
+      value: 5,
+      icon: "time-outline",
+      description: "Need to confirm",
     },
     {
-      title: "Available Sets",
-      value: 46,
-      icon: "cube-outline",
-      description: "Ready for booking",
+      title: "Today's Orders",
+      value: 8,
+      icon: "calendar-outline",
+      description: "Scheduled today",
     },
     {
-      title: "Deliveries",
-      value: 32,
-      icon: "bicycle-outline",
-      description: "Scheduled this week",
+      title: "Unpaid",
+      value: "₱4,200",
+      icon: "alert-circle-outline",
+      description: "From 3 orders",
     },
     {
       title: "Revenue",
       value: "₱24,850",
       icon: "cash-outline",
-      description: "Earned this month",
+      description: "October 2026",
     },
   ];
 

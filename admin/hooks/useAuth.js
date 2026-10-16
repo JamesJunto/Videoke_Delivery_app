@@ -18,11 +18,11 @@ const useAuth = () => {
     }
   };
 
-  const handleRegister = async ( first_name,last_name,phone,address,email,password) => {
+  const handleRegister = async (email,password) => {
     try {
       setLoading(true);
 
-      const res = await registerAccount(first_name,last_name,phone,address,email,password );
+      const res = await registerAccount(email,password );
 
       return res;
     } finally {
