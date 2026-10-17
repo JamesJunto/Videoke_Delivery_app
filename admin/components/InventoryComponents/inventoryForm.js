@@ -34,7 +34,7 @@ const InventoryForm = ({ onClose }) => {
 
       onClose();
     } catch (error) {
-      console.error("Failed to add inventory:", error);
+     Alert.alert("Failed to add inventory:", error);
     }
   };
 

@@ -1,5 +1,5 @@
 import express from 'express'
-import { getOrders , createOrder} from '../services/ordersServices.js';
+import {  createOrder} from '../services/ordersServices.js';
 const router = express.Router()
 
 
@@ -7,9 +7,11 @@ router.post("/", async (req, res) => {
   console.log("Request body:", req.body);
   const orderData = {
     order_id: req.body.order_id,
-    customer_name: req.body.customer_name,
+    name: req.body.name,
     contact_num: req.body.contact_num,
     address: req.body.address,
+    product_name: req.body.product_name,
+    description: req.body.description,
     delivery_schedule: req.body.delivery_schedule,
     delivery_fee: req.body.delivery_fee,
     total: req.body.total,

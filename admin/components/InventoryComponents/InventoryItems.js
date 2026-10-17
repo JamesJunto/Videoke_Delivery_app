@@ -4,7 +4,7 @@ import { useState } from "react";
 import ItemsEditModal from "./itemsEditModal";
 
 const InventoryItems = ({ searchQuery = "" }) => {
-  const { items, loading, error, handleAddInventory } = useInventory();
+  const { items, loading, error,} = useInventory();
   const [selectedItem, setSelectedItem] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 

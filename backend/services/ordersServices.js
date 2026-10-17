@@ -1,41 +1,89 @@
-import { db } from '../db.js'
+import { db } from "../db.js";
 
 export const createOrder = async (orderData) => {
-  const conn = db.promise()
+  const conn = db.promise();
 
   try {
     await conn.beginTransaction();
 
-    let customer_id;
     const [existing] = await conn.query(
-      "SELECT customer_id FROM customer WHERE contact_num = ? LIMIT 1",
+      `SELECT customer_id
+       FROM customer
+       WHERE phone = ?
+       LIMIT 1`,
       [orderData.contact_num]
     );
+
+    let customer_id;
 
     if (existing.length > 0) {
       customer_id = existing[0].customer_id;
     } else {
-      const [customerResult] = await conn.query(
-        `INSERT INTO customer (customer_name, contact_num, address)
+      const [customer] = await conn.query(
+        `INSERT INTO customer
+         (name, phone, address)
          VALUES (?, ?, ?)`,
-        [orderData.customer_name, orderData.contact_num, orderData.address]
+        [
+          orderData.name,
+          orderData.contact_num,
+          orderData.address,
+        ]
       );
-      customer_id = customerResult.insertId;
+
+      customer_id = customer.insertId;
+    }
+
+    const [products] = await conn.query(
+      `SELECT product_id, price
+       FROM product
+       WHERE product_name = ?
+       LIMIT 1`,
+      [orderData.product_name]
+    );
+
+    if (products.length === 0) {
+      throw new Error("Product not found in inventory.");
+    }
+
+    const product_id = products[0].product_id;
+    const price = Number(products[0].price);
+    const quantity = 1;
+
+    const delivery_fee = Number(orderData.delivery_fee) || 0;
+    const total = Number(orderData.total);
+    const subtotal = total - delivery_fee;
+
+    if (
+      !Number.isFinite(total) ||
+      !Number.isFinite(delivery_fee) ||
+      subtotal < 0
+    ) {
+      throw new Error("Invalid order amount.");
     }
 
     await conn.query(
       `INSERT INTO orders
-         (order_id, customer_id, delivery_schedule, delivery_fee, subtotal, total, status, payment_status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+       (order_id, customer_id, subtotal, total, status)
+       VALUES (?, ?, ?, ?, ?)`,
       [
         orderData.order_id,
         customer_id,
-        orderData.delivery_schedule,
-        orderData.delivery_fee,
-        orderData.total,
-        orderData.total,
-        "pending",
-        orderData.payment_status,
+        subtotal,
+        total,
+        orderData.status || "pending",
+      ]
+    );
+
+    await conn.query(
+      `INSERT INTO order_items
+       (order_id, product_id, quantity, price, subtotal)
+       VALUES (?, ?, ?, ?, ?)`,
+      [
+        orderData.order_id,
+        product_id,
+        quantity,
+        price,
+        price * quantity,
       ]
     );
 
@@ -43,33 +91,9 @@ export const createOrder = async (orderData) => {
 
     return {
       success: true,
-      order_id: orderData.order_id,
-      customer_id,
     };
   } catch (error) {
     await conn.rollback();
     throw error;
-  } finally {
-    conn.release();
   }
-};
-
-
-export const getOrders = (callback) => {
-  db.query(
-    `SELECT
-        o.id,
-        o.order_id,
-        o.customer_id,
-        p.product_name,
-        o.total,
-        o.quantity,
-        o.price
-    FROM orders o
-    JOIN inventory p
-        ON o.product_id = p.product_id`,
-    (err, result) => {
-      callback(err, result);
-    }
-  );
 };

@@ -1,9 +1,11 @@
+import { api } from "./api";
+
 export const addOrderItem = async (item) => {
   try {
-    const response = await api.post("/inventory", item);
+    const response = await api.post("/orders", item);
     return response.data;
   } catch (error) {
-    console.error("Error adding inventory item:", error);
+    alert("Error adding inventory item:", error);
     throw error;
   }
 };
