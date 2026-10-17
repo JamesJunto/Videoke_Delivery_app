@@ -1,4 +1,5 @@
 import { Modal, View, Text, Pressable, ScrollView } from "react-native";
+import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 const OrderDetailsModal = ({ visible, onClose, order }) => {
@@ -40,8 +41,6 @@ const OrderDetailsModal = ({ visible, onClose, order }) => {
 
           <View className="mb-4 rounded-[12px] border border-[#E6EFE7] bg-[#FFFDF9] p-4">
 
-
-
             <View className="mb-2.5 flex-row items-center">
               <Text className="text-[17px] font-bold text-[#1F5A4B]">
                 Customer
@@ -49,7 +48,7 @@ const OrderDetailsModal = ({ visible, onClose, order }) => {
             </View>
 
             <Text className="text-[16px] font-semibold text-[#1F5A4B]">
-              {order.customer_name}
+              {order.name}
             </Text>
 
             <View className="mt-2 flex-row items-center">
@@ -60,7 +59,7 @@ const OrderDetailsModal = ({ visible, onClose, order }) => {
               />
 
               <Text className="ml-1 text-[13px] font-normal text-[#1F5A4B]">
-                {order.contact_num}
+                {order.phone}
               </Text>
             </View>
 
@@ -97,11 +96,11 @@ const OrderDetailsModal = ({ visible, onClose, order }) => {
             </Text>
 
             <Text className="mb-1 text-[11px] text-[#6B8A84]">
-              Rental Schedule
+              Delivery Schedule
             </Text>
 
             <Text className="mb-3 text-[13px] text-[#6B8A84]">
-              {order.package_detail}
+              {order.delivery_schedule}
             </Text>
 
             <View className="my-3 h-[1px] bg-[#E6EFE7]" />

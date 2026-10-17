@@ -1,3 +1,4 @@
+
 import {
   Modal,
   View,
@@ -6,9 +7,13 @@ import {
   ScrollView,
   TextInput,
   Alert,
-} from "react-native";
+  Platform
+  }
+from "react-native";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
+
 import useOrder from "../../hooks/useOrder";
 import useInventory from "../../hooks/useInventory";
 import SelectProductModal from "./SelectProductModal";
@@ -17,15 +22,9 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
   const { items, loading, error } = useInventory();
   const { handleCreateOrder } = useOrder();
 
-
-  const availableProducts = (items ?? []).filter(
-    (item) =>
-      item.status === "available" &&
-      Number(item.available_sets ?? item.stock) > 0
-  );
-
   const [productModalVisible, setProductModalVisible] = useState(false);
-
+  const [deliveryDate, setDeliveryDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -40,23 +39,63 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
     status: "pending",
   });
 
+  const availableProducts = (items ?? []).filter(
+    (item) =>
+      item.status === "available" &&
+      Number(item.available_sets ?? item.stock) > 0
+  );
+
   const updateField = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSelectProduct = (product) => {
     const fee = Number(form.delivery_fee) || 0;
-    const total = (Number(product.price) || 0) + fee
+    const total = (Number(product.price) || 0) + fee;
 
     setForm((prev) => ({
       ...prev,
       product_name: product.product_name ?? "",
       description: product.description ?? "",
-      delivery_fee: prev.delivery_fee,
       total: String(total),
     }));
 
     setProductModalVisible(false);
+  };
+
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false);
+
+    if (event.type !== "set" || !selectedDate) {
+      return;
+    }
+
+    setDeliveryDate(selectedDate);
+
+    const year = selectedDate.getFullYear();
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
+    const day = String(selectedDate.getDate()).padStart(2, "0");
+    const formattedDate = `${year}-${month}-${day} 00:00:00`;
+    updateField("delivery_schedule", formattedDate);
+
+  };
+
+  const resetForm = () => {
+    setForm({
+      name: "",
+      contact_num: "",
+      address: "",
+      product_name: "",
+      description: "",
+      delivery_schedule: "",
+      delivery_fee: "",
+      total: "",
+      payment_status: "Unpaid",
+      status: "pending",
+    });
+
+    setDeliveryDate(new Date());
+    setShowDatePicker(false);
   };
 
   const handleSave = async () => {
@@ -76,7 +115,7 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
     );
 
     if (emptyField) {
-     console.log("Missing Information", `Please enter the ${emptyField.label}.`);
+     console.log(`Missing information: ${emptyField.label}`)
       return;
     }
 
@@ -86,7 +125,7 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
       Number(form.delivery_fee) < 0 ||
       Number(form.total) <= 0
     ) {
-      Alert.alert(
+     alert(
         "Invalid Amount",
         "Delivery fee must be zero or greater, and total amount must be greater than zero."
       );
@@ -100,7 +139,7 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
       address: form.address.trim(),
       product_name: form.product_name.trim(),
       description: form.description.trim(),
-      delivery_schedule: form.delivery_schedule.trim(),
+      delivery_schedule: form.delivery_schedule,
       delivery_fee: Number(form.delivery_fee),
       total: Number(form.total),
       payment_status: form.payment_status,
@@ -109,24 +148,22 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
 
     try {
       const res = await handleCreateOrder(newOrder);
+
       console.log("Added new order:", res);
 
-      setForm({
-        name: "",
-        contact_num: "",
-        address: "",
-        product_name: "",
-        description: "",
-        delivery_schedule: "",
-        delivery_fee: "",
-        total: "",
-        payment_status: "Unpaid",
-        status: "pending",
-      });
-
+      resetForm();
       onClose();
+
+      if (onSave) {
+        onSave(res);
+      }
     } catch (err) {
-      Alert.alert("Failed to create order", String(err));
+     alert(
+        "Failed to Create Order",
+        err?.response?.data?.message ||
+          err?.message ||
+          "Something went wrong while saving the order."
+      );
     }
   };
 
@@ -135,7 +172,11 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
 
   return (
     <>
-      <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
+      <Modal
+        visible={visible}
+        animationType="slide"
+        onRequestClose={onClose}
+      >
         <View className="flex-1 bg-[#F7FBF8]">
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -144,10 +185,11 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
             <View className="mb-6 flex-row items-center">
               <Pressable
                 onPress={onClose}
-                className="h-10 w-10 items-center justify-center rounded-full bg-[#E6EFE7] mr-3"
+                className="mr-3 h-10 w-10 items-center justify-center rounded-full bg-[#E6EFE7]"
               >
                 <Ionicons name="arrow-back" size={24} color="#1F5A4B" />
               </Pressable>
+
               <Text className="text-[22px] font-bold text-[#1F5A4B]">
                 Add Order
               </Text>
@@ -197,6 +239,7 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
               />
             </View>
 
+
             <View className="mb-4 rounded-[12px] border border-[#E6EFE7] bg-[#FFFDF9] p-4">
               <View className="mb-3 flex-row items-center">
                 <Ionicons
@@ -209,7 +252,9 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
                 </Text>
               </View>
 
-              <Text className="mb-1 text-[11px] text-[#6B8A84]">Product</Text>
+              <Text className="mb-1 text-[11px] text-[#6B8A84]">
+                Product
+              </Text>
               <Pressable
                 onPress={() => setProductModalVisible(true)}
                 className="mb-3 flex-row items-center justify-between rounded-[8px] border border-[#E6EFE7] bg-white px-3 py-3"
@@ -221,6 +266,7 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
                 >
                   {form.product_name || "Select a product"}
                 </Text>
+
                 <Ionicons name="chevron-down" size={18} color="#1F5A4B" />
               </Pressable>
 
@@ -239,13 +285,67 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
               <Text className="mb-1 text-[11px] text-[#6B8A84]">
                 Delivery Schedule
               </Text>
-              <TextInput
-                placeholder="Oct 17, 2026 · 9:00 AM"
-                placeholderTextColor="#A8BFB9"
-                value={form.delivery_schedule}
-                onChangeText={(text) => updateField("delivery_schedule", text)}
-                className="rounded-[8px] border border-[#E6EFE7] bg-white px-3 py-2.5 text-[14px] text-[#1F5A4B]"
-              />
+
+
+              {Platform.OS === "web" ? (
+                <View className="rounded-[8px] border border-[#E6EFE7] bg-white px-3 py-2.5">
+                  <input
+                    type="date"
+                    min={new Date().toLocaleDateString("en-CA")}
+                    value={form.delivery_schedule.slice(0, 10)}
+                    onChange={(event) => {
+                      const date = event.target.value;
+
+                      if (!date) return;
+
+                      setDeliveryDate(new Date(`${date}T12:00:00`));
+                      updateField("delivery_schedule", `${date} 00:00:00`);
+                    }}
+
+                    style={{
+                      width: "100%",
+                      border: "none",
+                      outline: "none",
+                      background: "transparent",
+                      color: "#1F5A4B",
+                      fontSize: 14,
+                    }}
+                  />
+                </View>
+              ) : (
+                <>
+                  <Pressable
+                    onPress={() => setShowDatePicker(true)}
+                    className="flex-row items-center justify-between rounded-[8px] border border-[#E6EFE7] bg-white px-3 py-3"
+                  >
+                    <Text
+                      className={`text-[14px] ${
+                        form.delivery_schedule ? "text-[#1F5A4B]" : "text-[#A8BFB9]"
+                      }`}
+                    >
+                      {form.delivery_schedule
+                        ? deliveryDate.toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })
+                        : "Select delivery date"}
+                    </Text>
+
+                    <Ionicons name="calendar-outline" size={20} color="#1F5A4B" />
+                  </Pressable>
+
+                  {showDatePicker && (
+                    <DateTimePicker
+                      value={deliveryDate}
+                      mode="date"
+                      display="default"
+                      minimumDate={new Date()}
+                      onChange={handleDateChange}
+                    />
+                  )}
+                </>
+              )}
             </View>
 
             <View className="mb-6 rounded-[12px] border border-[#E6EFE7] bg-[#FFFDF9] p-4">
@@ -256,7 +356,6 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
                 </Text>
               </View>
 
-            <View className="">
               <Text className="mb-1 text-[11px] text-[#6B8A84]">
                 Delivery Fee
               </Text>
@@ -264,7 +363,7 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
                 placeholder="300"
                 placeholderTextColor="#A8BFB9"
                 keyboardType="numeric"
-                value={form.delivery_fee ?? ""}
+                value={form.delivery_fee}
                 onChangeText={(value) => {
                   const product = items.find(
                     (item) => item.product_name === form.product_name
@@ -290,14 +389,14 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
                 placeholder="1800"
                 placeholderTextColor="#A8BFB9"
                 keyboardType="numeric"
-                value={form.total ?? ""}
-                className="mb-3 rounded-[8px]   border border-[#E6EFE7] bg-white px-3 py-2.5 text-[14px] text-[#1F5A4B]"
+                value={form.total}
+                className="mb-3 rounded-[8px] border border-[#E6EFE7] bg-white px-3 py-2.5 text-[14px] text-[#1F5A4B]"
               />
-            </View>
+
               <Text className="mb-1 text-[11px] text-[#6B8A84]">
                 Payment Status
               </Text>
-              <View className="mb-3 flex-row gap-2">
+              <View className="mb-3 flex-row flex-wrap gap-2">
                 {paymentOptions.map((option) => (
                   <Pressable
                     key={option}
@@ -324,7 +423,7 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
               <Text className="mb-1 text-[11px] text-[#6B8A84]">
                 Order Status
               </Text>
-              <View className="flex-row gap-2">
+              <View className="flex-row flex-wrap gap-2">
                 {statusOptions.map((option) => (
                   <Pressable
                     key={option}

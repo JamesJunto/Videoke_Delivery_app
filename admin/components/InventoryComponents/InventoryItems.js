@@ -1,26 +1,67 @@
-import { Text, View, Pressable } from "react-native";
-import useInventory from "../../hooks/useInventory";
+
+import { Text, View, Pressable, ActivityIndicator } from "react-native";
 import { useState } from "react";
+import useInventory from "../../hooks/useInventory";
 import ItemsEditModal from "./itemsEditModal";
 
 const InventoryItems = ({ searchQuery = "" }) => {
-  const { items, loading, error,} = useInventory();
+  const { items, loading, error } = useInventory();
+
   const [selectedItem, setSelectedItem] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
   const filteredItems = items.filter((item) => {
     const searchMatch =
       searchQuery.trim() === "" ||
-      item.product_name.toLowerCase().includes(searchQuery.toLowerCase());
-    return  searchMatch;
+      item.product_name
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+    return searchMatch;
   });
 
   if (loading) {
-    return <Text>Loading...</Text>;
+    return (
+      <View className="items-center justify-center py-12">
+        <ActivityIndicator size="large" color="#1F5A4B" />
+
+        <Text className="mt-3 text-[14px] text-[#6B8A84]">
+          Loading inventory...
+        </Text>
+      </View>
+    );
   }
 
   if (error) {
-    return <Text>Error: {error}</Text>;
+    return (
+      <View className="items-center justify-center py-12">
+        <Text className="text-[16px] font-bold text-[#A33A3A]">
+          Failed to load inventory
+        </Text>
+
+        <Text className="mt-2 text-center text-[13px] text-[#6B8A84]">
+          {String(error)}
+        </Text>
+      </View>
+    );
+  }
+
+  if (filteredItems.length === 0) {
+    const hasSearch = searchQuery.trim() !== "";
+
+    return (
+      <View className="items-center justify-center py-12">
+        <Text className="text-[16px] font-bold text-[#1F5A4B]">
+          {hasSearch ? "No packages found" : "No inventory items yet"}
+        </Text>
+
+        <Text className="mt-2 text-center text-[13px] text-[#6B8A84]">
+          {hasSearch
+            ? "Try searching with a different package name."
+            : "Your packages will appear here once they are added."}
+        </Text>
+      </View>
+    );
   }
 
   return (
@@ -84,6 +125,7 @@ const InventoryItems = ({ searchQuery = "" }) => {
                 <Text className="text-[22px] font-bold text-[#1F5A4B]">
                   ₱{item.price}
                 </Text>
+
                 <Text className="ml-1 mb-0.5 text-[13px] text-[#6B8A84]">
                   / unit
                 </Text>

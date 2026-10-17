@@ -1,17 +1,29 @@
 import { db } from "../db.js";
 
+
 export const createOrder = async (orderData) => {
   const conn = db.promise();
 
   try {
     await conn.beginTransaction();
 
+    const {
+      order_id,
+      name,
+      contact_num,
+      address,
+      product_name,
+      delivery_schedule,
+      delivery_fee,
+      status,
+    } = orderData;
+
     const [existing] = await conn.query(
       `SELECT customer_id
        FROM customer
        WHERE phone = ?
        LIMIT 1`,
-      [orderData.contact_num]
+      [contact_num]
     );
 
     let customer_id;
@@ -20,14 +32,9 @@ export const createOrder = async (orderData) => {
       customer_id = existing[0].customer_id;
     } else {
       const [customer] = await conn.query(
-        `INSERT INTO customer
-         (name, phone, address)
+        `INSERT INTO customer (name, phone, address)
          VALUES (?, ?, ?)`,
-        [
-          orderData.name,
-          orderData.contact_num,
-          orderData.address,
-        ]
+        [name, contact_num, address]
       );
 
       customer_id = customer.insertId;
@@ -38,7 +45,7 @@ export const createOrder = async (orderData) => {
        FROM product
        WHERE product_name = ?
        LIMIT 1`,
-      [orderData.product_name]
+      [product_name]
     );
 
     if (products.length === 0) {
@@ -48,29 +55,32 @@ export const createOrder = async (orderData) => {
     const product_id = products[0].product_id;
     const price = Number(products[0].price);
     const quantity = 1;
+    const itemSubtotal = price * quantity;
 
-    const delivery_fee = Number(orderData.delivery_fee) || 0;
-    const total = Number(orderData.total);
-    const subtotal = total - delivery_fee;
+    const fee = Number(delivery_fee ?? 0);
+    const total = itemSubtotal + fee;
 
     if (
-      !Number.isFinite(total) ||
-      !Number.isFinite(delivery_fee) ||
-      subtotal < 0
+      !Number.isFinite(price) ||
+      price < 0 ||
+      !Number.isFinite(fee) ||
+      fee < 0
     ) {
-      throw new Error("Invalid order amount.");
+      throw new Error("Invalid product price or delivery fee.");
     }
 
     await conn.query(
       `INSERT INTO orders
-       (order_id, customer_id, subtotal, total, status)
-       VALUES (?, ?, ?, ?, ?)`,
+       (order_id, customer_id, subtotal, status, delivery_fee, total, delivery_schedule)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
-        orderData.order_id,
+        order_id,
         customer_id,
-        subtotal,
+        itemSubtotal,
+        status || "pending",
+        fee,
         total,
-        orderData.status || "pending",
+        delivery_schedule,
       ]
     );
 
@@ -78,22 +88,97 @@ export const createOrder = async (orderData) => {
       `INSERT INTO order_items
        (order_id, product_id, quantity, price, subtotal)
        VALUES (?, ?, ?, ?, ?)`,
-      [
-        orderData.order_id,
-        product_id,
-        quantity,
-        price,
-        price * quantity,
-      ]
+      [order_id, product_id, quantity, price, itemSubtotal]
     );
 
     await conn.commit();
 
     return {
       success: true,
+      order_id,
     };
   } catch (error) {
     await conn.rollback();
+    throw error;
+  }
+};
+
+export const getOrders = async () => {
+  try {
+    const [results] = await db.promise().query(
+     `SELECT
+          o.order_id,
+          o.status,
+          c.name,
+          c.phone,
+          p.product_name,
+          p.description,
+          o.delivery_schedule,
+          c.address,
+          oi.quantity,
+          oi.price,
+          oi.subtotal,
+          o.delivery_fee,
+          o.total
+      FROM order_items oi
+      INNER JOIN orders o
+          ON oi.order_id = o.order_id
+      INNER JOIN customer c
+          ON o.customer_id = c.customer_id
+      INNER JOIN product p
+          ON oi.product_id = p.product_id`
+    )
+    console.log("Date from MySQL:", results[0]?.delivery_schedule);
+    console.log("Date type:", typeof results[0]?.delivery_schedule);
+    return results
+
+  } catch (error) {
+    console.log('Error fetching orders from database:', error)
+  }
+}
+
+export const updateOrder = async (order_id, orderData) => {
+  const conn = db.promise();
+
+  try {
+    await conn.beginTransaction();
+
+    const {name, contact_num,  address,  product_name,  delivery_schedule,  delivery_fee,  total,  status,   } = orderData;
+
+    await conn.query(
+      `UPDATE orders
+       SET status = ?,
+           delivery_schedule = ?,
+           delivery_fee = ?,
+           total = ?
+       WHERE order_id = ?`,
+      [status, delivery_schedule, delivery_fee, total, order_id]
+    );
+
+    await conn.query(
+      `UPDATE customer c
+       INNER JOIN orders o ON o.customer_id = c.customer_id
+       SET c.name = ?,
+           c.phone = ?,
+           c.address = ?
+       WHERE o.order_id = ?`,
+      [name, contact_num, address, order_id]
+    );
+
+    await conn.query(
+      `UPDATE order_items oi
+       INNER JOIN product p ON p.product_name = ?
+       SET oi.product_id = p.product_id
+       WHERE oi.order_id = ?`,
+      [product_name, order_id]
+    );
+
+    await conn.commit();
+
+    return { success: true, message: "Order updated successfully" };
+  } catch (error) {
+    await conn.rollback();
+    console.error("Error updating order:", error);
     throw error;
   }
 };
