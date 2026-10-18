@@ -1,5 +1,5 @@
-import { db } from "../db.js";
 
+import { db } from "../db.js";
 
 export const createOrder = async (orderData) => {
   const conn = db.promise();
@@ -41,7 +41,7 @@ export const createOrder = async (orderData) => {
     }
 
     const [products] = await conn.query(
-      `SELECT product_id, price
+      `SELECT product_id, price, stock
        FROM product
        WHERE product_name = ?
        LIMIT 1`,
@@ -55,10 +55,11 @@ export const createOrder = async (orderData) => {
     const product_id = products[0].product_id;
     const price = Number(products[0].price);
     const quantity = 1;
-    const itemSubtotal = price * quantity;
+    const stock = Number(products[0].stock);
+    const AvailableStock = stock - quantity;
+
 
     const fee = Number(delivery_fee ?? 0);
-    const total = itemSubtotal + fee;
 
     if (
       !Number.isFinite(price) ||
@@ -67,6 +68,25 @@ export const createOrder = async (orderData) => {
       fee < 0
     ) {
       throw new Error("Invalid product price or delivery fee.");
+    }
+
+    if (!Number.isInteger(stock) || stock < quantity) {
+      throw new Error("Insufficient stock.");
+    }
+
+    const itemSubtotal = price * quantity;
+    const total = itemSubtotal + fee;
+
+    const [stockResult] = await conn.query(
+      `UPDATE product
+       SET stock = ?
+       WHERE product_id = ?
+         AND stock >= ?`,
+      [AvailableStock, product_id, quantity]
+    );
+
+    if (stockResult.affectedRows === 0) {
+      throw new Error("Insufficient stock.");
     }
 
     await conn.query(
@@ -106,7 +126,7 @@ export const createOrder = async (orderData) => {
 export const getOrders = async () => {
   try {
     const [results] = await db.promise().query(
-     `SELECT
+      `SELECT
           o.order_id,
           o.status,
           c.name,
@@ -120,22 +140,21 @@ export const getOrders = async () => {
           oi.subtotal,
           o.delivery_fee,
           o.total
-      FROM order_items oi
-      INNER JOIN orders o
+       FROM order_items oi
+       INNER JOIN orders o
           ON oi.order_id = o.order_id
-      INNER JOIN customer c
+       INNER JOIN customer c
           ON o.customer_id = c.customer_id
-      INNER JOIN product p
+       INNER JOIN product p
           ON oi.product_id = p.product_id`
-    )
-    console.log("Date from MySQL:", results[0]?.delivery_schedule);
-    console.log("Date type:", typeof results[0]?.delivery_schedule);
-    return results
+    );
 
+    return results;
   } catch (error) {
-    console.log('Error fetching orders from database:', error)
+    console.log("Error fetching orders from database:", error);
+    throw error;
   }
-}
+};
 
 export const updateOrder = async (order_id, orderData) => {
   const conn = db.promise();
@@ -143,7 +162,16 @@ export const updateOrder = async (order_id, orderData) => {
   try {
     await conn.beginTransaction();
 
-    const {name, contact_num,  address,  product_name,  delivery_schedule,  delivery_fee,  total,  status,   } = orderData;
+    const {
+      name,
+      contact_num,
+      address,
+      product_name,
+      delivery_schedule,
+      delivery_fee,
+      total,
+      status,
+    } = orderData;
 
     await conn.query(
       `UPDATE orders
@@ -175,7 +203,10 @@ export const updateOrder = async (order_id, orderData) => {
 
     await conn.commit();
 
-    return { success: true, message: "Order updated successfully" };
+    return {
+      success: true,
+      message: "Order updated successfully",
+    };
   } catch (error) {
     await conn.rollback();
     console.error("Error updating order:", error);
