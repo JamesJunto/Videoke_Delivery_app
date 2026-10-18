@@ -21,3 +21,13 @@ export const addInventoryItem = async (item) => {
     throw error;
   }
 };
+
+export const updateInventoryItem = async (product_id, updatedInventory) => {
+  try {
+    const response = await api.put(`/inventory/${product_id}`, updatedInventory)
+    return response.data
+  } catch (error) {
+    alert("Error updating order", error);
+    throw error
+  }
+}

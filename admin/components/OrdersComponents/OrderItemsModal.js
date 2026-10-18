@@ -175,15 +175,6 @@ const OrderDetailsModal = ({ visible, onClose, order }) => {
               </Text>
             </View>
           </View>
-
-          <Pressable
-            onPress={onClose}
-            className="items-center rounded-[12px] bg-[#1F5A4B] py-4"
-          >
-            <Text className="text-[14px] font-semibold text-white">
-              Close
-            </Text>
-          </Pressable>
         </ScrollView>
       </View>
     </Modal>

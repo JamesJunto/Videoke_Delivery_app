@@ -1,27 +1,46 @@
-import { useEffect, useState } from "react";
-import {getInventory, addInventoryItem,} from "../services/inventoryServices";
+import { useState, useEffect, useCallback  } from "react";
+import { getInventory, addInventoryItem, updateInventoryItem } from"../services/inventoryServices";
 
 const useInventory = () => {
   const [items, setItem] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchInventory = async () => {
+  const fetchInventory = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
       const data = await getInventory();
       setItem(data);
-    };
-
-    fetchInventory();
+    } catch (err) {
+      setError(err?.message || "Failed to fetch inventory.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const handleAddInventory = async (form) => {
-    const data = await addInventoryItem(form);
+  useEffect(() => {
+    fetchInventory();
+  }, [fetchInventory]);
 
-    setItem((prevItems) => [...prevItems, data]);
-
-    return data;
+  const handleAddInventory = async (inventory) => {
+    const response = await addInventoryItem(inventory);
+    return response;
   };
 
-  return { items, handleAddInventory };
+  const handleUpdateInventory = async (product_id, updatedInventory) => {
+    const response = await updateInventoryItem(product_id, updatedInventory);
+    return response;
+  };
+
+  return {
+    items,
+    loading,
+    error,
+    fetchInventory,
+    handleAddInventory,
+    handleUpdateInventory,
+  };
 };
 
 export default useInventory;

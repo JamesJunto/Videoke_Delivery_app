@@ -20,7 +20,7 @@ import SelectProductModal from "./SelectProductModal";
 
 const AddOrderModal = ({ visible, onClose, onSave }) => {
   const { items, loading, error } = useInventory();
-  const { handleCreateOrder } = useOrder();
+  const { handleCreateOrder, fetchOrders } = useOrder();
 
   const [productModalVisible, setProductModalVisible] = useState(false);
   const [deliveryDate, setDeliveryDate] = useState(new Date());
@@ -151,12 +151,10 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
 
       console.log("Added new order:", res);
 
+      fetchOrders()
       resetForm();
       onClose();
 
-      if (onSave) {
-        onSave(res);
-      }
     } catch (err) {
      alert(
         "Failed to Create Order",

@@ -2,6 +2,7 @@ import express from "express";
 import {
   getInventory,
   createInventory,
+  updateInventory
 } from "../services/inventoryServices.js";
 
 const router = express.Router();
@@ -28,5 +29,24 @@ router.post("/", async (req, res) => {
     res.status(500).send("Error creating inventory");
   }
 });
+
+router.put("/:product_id", async (req, res) => {
+  try {
+    const { product_id } = req.params;
+    const updatedProduct = req.body;
+
+    const result = await updateInventory(product_id, updatedProduct);
+
+    res.status(200).json({
+      message: "Inventory updated successfully",
+      result,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Error updating inventory",
+    });
+  }
+})
 
 export default router;

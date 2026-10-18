@@ -5,7 +5,7 @@ import useInventory from "../../hooks/useInventory";
 import ItemsEditModal from "./itemsEditModal";
 
 const InventoryItems = ({ searchQuery = "" }) => {
-  const { items, loading, error } = useInventory();
+  const { items, loading, error, fetchInventory} = useInventory();
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -68,7 +68,7 @@ const InventoryItems = ({ searchQuery = "" }) => {
     <>
       {filteredItems.map((item) => {
         const isAvailable = item.status === "available";
-        const totalStocks = item.quantity;
+        const totalStocks = item.stock;
         const availableStocks = item.available_sets ?? item.quantity;
 
         return (
@@ -153,6 +153,7 @@ const InventoryItems = ({ searchQuery = "" }) => {
         onClose={() => {
           setModalVisible(false);
           setSelectedItem(null);
+          fetchInventory()
         }}
       />
     </>

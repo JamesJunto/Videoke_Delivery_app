@@ -11,16 +11,17 @@ export default function Layout() {
   const isValidScreen = pathname === "/screens/LoginScreen" || pathname=== "/screens/RegisterScreen";
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView className="flex-1 bg-[#F7FBF8]">
-        {!isValidScreen && <Header />}
+     <SafeAreaProvider>
+       <SafeAreaView className="flex-1 bg-[#F7FBF8]">
+         {!isValidScreen && <Header />}
 
-        <View className="flex-1 ">
-          <Slot />
-        </View>
+         <View className="flex-1 ">
+           <Slot />
+         </View>
 
-        {!isValidScreen && <BottomNavigation />}
-    </SafeAreaView>
+         {!isValidScreen && <BottomNavigation />}
+     </SafeAreaView>
     </SafeAreaProvider>
+
   );
 }

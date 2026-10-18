@@ -152,15 +152,11 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
 
     try {
       setSaving(true);
-      const res = await handleUpdateOrder(order.order_id, updatedOrder);
-      console.log("Updated order:", res);
+      await handleUpdateOrder(order.order_id, updatedOrder);
+      onClose();
+      if (onSave) onSave();
     } catch (err) {
-      Alert.alert(
-        "Failed to Update Order",
-        err?.response?.data?.message ||
-          err?.message ||
-          "Something went wrong while saving the order.",
-      );
+      Alert.alert("Failed to Update Order", err?.message || "Something went wrong.");
     } finally {
       setSaving(false);
     }
