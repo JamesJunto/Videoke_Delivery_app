@@ -3,7 +3,7 @@ import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import OrdersItems from "../../components/OrdersComponents/ordersItems";
 import AddOrderModal from "../../components/OrdersComponents/AddOrderModal";
-
+import useOrder from "../../hooks/useOrder";
 const filters = [
   { label: "All", value: "All" },
   { label: "Pending", value: "pending" },
@@ -15,6 +15,8 @@ const OrdersScreen = () => {
   const [activeFilter, setActiveFilter] = useState("All");
   const [search, setSearch] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
+
+  const {fetchOrders} = useOrder()
 
   return (
     <View className="flex-1 bg-[#F7FBF8]">
@@ -95,6 +97,7 @@ const OrdersScreen = () => {
       <AddOrderModal
         visible={showAddModal}
         onClose={() => setShowAddModal(false)}
+        refetch={fetchOrders}
       />
     </View>
   );

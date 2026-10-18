@@ -36,7 +36,7 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
     delivery_schedule: "",
     delivery_fee: "",
     total: "",
-    payment_status: "Unpaid",
+    payment_status: "",
     status: "pending",
   });
 
@@ -53,7 +53,7 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
           : "",
         delivery_fee: order.delivery_fee ?? "",
         total: String(order.total ?? ""),
-        payment_status: order.payment_status ?? "Unpaid",
+        payment_status: order.payment_status ?? "",
         status: order.status ?? "pending",
       });
 
@@ -162,7 +162,7 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
     }
   };
 
-  const statusOptions = ["pending", "confirmed", "closed"];
+  const statusOptions = ["pending", "delivered", "closed"];
   const paymentOptions = ["Unpaid", "50% paid", "Paid"];
 
   const getStatusStyle = (status) => {

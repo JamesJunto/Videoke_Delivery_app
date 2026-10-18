@@ -2,8 +2,8 @@ import { useState } from "react";
 import { View, Text, TextInput, Pressable, Alert } from "react-native";
 import useInventory from "../../hooks/useInventory";
 
-const InventoryForm = ({ onClose }) => {
-  const { handleAddInventory, fetchInventory } = useInventory();
+const InventoryForm = ({ onClose, refetch }) => {
+  const { handleAddInventory } = useInventory();
 
   const [form, setForm] = useState({
     product_name: "",

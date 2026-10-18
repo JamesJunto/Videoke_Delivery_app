@@ -139,7 +139,11 @@ const OrdersItems = ({ filteredStatus, searchQuery = "" }) => {
         onClose={() => setEditOrder(null)}
         order={editOrder}
         onSave={fetchOrders}
+        refetch={fetchOrders}
       />
+
+
+
     </>
   );
 };

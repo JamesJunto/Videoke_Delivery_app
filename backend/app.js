@@ -16,8 +16,8 @@ app.use(express.json());
 
 app.use("/api/auth", rateLimiter, authRoutes);
 app.use("/api/customers", authMiddleware, customerRoute);
-app.use("/api/inventory",  inventoryRoute);
-app.use("/api/orders",  ordersRoute);
+app.use("/api/inventory", authMiddleware, inventoryRoute);
+app.use("/api/orders", authMiddleware, ordersRoute);
 
 app.listen(3000, () => {
   console.log(" Server running on port 3000");

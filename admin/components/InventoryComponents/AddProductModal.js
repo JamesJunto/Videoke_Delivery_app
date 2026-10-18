@@ -11,7 +11,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import InventoryForm from "./inventoryForm";
 
-const AddProductModal = ({ visible, onClose }) => {
+const AddProductModal = ({ visible, onClose, refetch }) => {
   const { height } = useWindowDimensions();
 
   return (

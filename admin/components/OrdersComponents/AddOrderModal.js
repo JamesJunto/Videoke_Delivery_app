@@ -18,7 +18,7 @@ import useOrder from "../../hooks/useOrder";
 import useInventory from "../../hooks/useInventory";
 import SelectProductModal from "./SelectProductModal";
 
-const AddOrderModal = ({ visible, onClose, onSave }) => {
+const AddOrderModal = ({ visible, onClose, refetch }) => {
   const { items, loading, error } = useInventory();
   const { handleCreateOrder, fetchOrders } = useOrder();
 
@@ -35,7 +35,7 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
     delivery_schedule: "",
     delivery_fee: "",
     total: "",
-    payment_status: "Unpaid",
+    payment_status:"",
     status: "pending",
   });
 
@@ -90,7 +90,7 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
       delivery_schedule: "",
       delivery_fee: "",
       total: "",
-      payment_status: "Unpaid",
+      payment_status: "",
       status: "pending",
     });
 
@@ -147,11 +147,8 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
     };
 
     try {
-      const res = await handleCreateOrder(newOrder);
-
-      console.log("Added new order:", res);
-
-      fetchOrders()
+      await handleCreateOrder(newOrder);
+      await refetch()
       resetForm();
       onClose();
 
@@ -166,7 +163,7 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
   };
 
   const paymentOptions = ["Unpaid", "50% paid", "Paid"];
-  const statusOptions = ["pending", "confirmed", "closed"];
+  const statusOptions = ["pending", "delivered", "closed"];
 
   return (
     <>
@@ -395,27 +392,28 @@ const AddOrderModal = ({ visible, onClose, onSave }) => {
                 Payment Status
               </Text>
               <View className="mb-3 flex-row flex-wrap gap-2">
-                {paymentOptions.map((option) => (
-                  <Pressable
-                    key={option}
-                    onPress={() => updateField("payment_status", option)}
-                    className={`rounded-full px-3 py-1.5 ${
-                      form.payment_status === option
-                        ? "bg-[#1F5A4B]"
-                        : "bg-[#E6EFE7]"
-                    }`}
-                  >
-                    <Text
-                      className={`text-[12px] font-semibold ${
-                        form.payment_status === option
-                          ? "text-white"
-                          : "text-[#1F5A4B]"
+                {paymentOptions.map((option) => {
+                  const current = form.payment_status || "Unpaid";
+                  const active = current === option;
+
+                  return (
+                    <Pressable
+                      key={option}
+                      onPress={() => updateField("payment_status", option)}
+                      className={`rounded-full px-3 py-1.5 ${
+                        active ? "bg-[#1F5A4B]" : "bg-[#E6EFE7]"
                       }`}
                     >
-                      {option}
-                    </Text>
-                  </Pressable>
-                ))}
+                      <Text
+                        className={`text-[12px] font-semibold ${
+                          active ? "text-white" : "text-[#1F5A4B]"
+                        }`}
+                      >
+                        {option}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
               </View>
 
               <Text className="mb-1 text-[11px] text-[#6B8A84]">

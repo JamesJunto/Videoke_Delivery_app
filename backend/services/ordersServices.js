@@ -1,8 +1,7 @@
-
-import { db } from "../db.js";
+import { db } from '../db.js'
 
 export const createOrder = async (orderData) => {
-  const conn = db.promise();
+  const conn = await db.getConnection();
 
   try {
     await conn.beginTransaction();
@@ -15,14 +14,12 @@ export const createOrder = async (orderData) => {
       product_name,
       delivery_schedule,
       delivery_fee,
+      payment_status,
       status,
     } = orderData;
 
     const [existing] = await conn.query(
-      `SELECT customer_id
-       FROM customer
-       WHERE phone = ?
-       LIMIT 1`,
+      `SELECT customer_id FROM customer WHERE phone = ? LIMIT 1`,
       [contact_num]
     );
 
@@ -32,19 +29,14 @@ export const createOrder = async (orderData) => {
       customer_id = existing[0].customer_id;
     } else {
       const [customer] = await conn.query(
-        `INSERT INTO customer (name, phone, address)
-         VALUES (?, ?, ?)`,
+        `INSERT INTO customer (name, phone, address) VALUES (?, ?, ?)`,
         [name, contact_num, address]
       );
-
       customer_id = customer.insertId;
     }
 
     const [products] = await conn.query(
-      `SELECT product_id, price, stock
-       FROM product
-       WHERE product_name = ?
-       LIMIT 1`,
+      `SELECT product_id, price, stock FROM product WHERE product_name = ? LIMIT 1`,
       [product_name]
     );
 
@@ -57,16 +49,9 @@ export const createOrder = async (orderData) => {
     const quantity = 1;
     const stock = Number(products[0].stock);
     const AvailableStock = stock - quantity;
-
-
     const fee = Number(delivery_fee ?? 0);
 
-    if (
-      !Number.isFinite(price) ||
-      price < 0 ||
-      !Number.isFinite(fee) ||
-      fee < 0
-    ) {
+    if (!Number.isFinite(price) || price < 0 || !Number.isFinite(fee) || fee < 0) {
       throw new Error("Invalid product price or delivery fee.");
     }
 
@@ -78,10 +63,7 @@ export const createOrder = async (orderData) => {
     const total = itemSubtotal + fee;
 
     const [stockResult] = await conn.query(
-      `UPDATE product
-       SET stock = ?
-       WHERE product_id = ?
-         AND stock >= ?`,
+      `UPDATE product SET stock = ? WHERE product_id = ? AND stock >= ?`,
       [AvailableStock, product_id, quantity]
     );
 
@@ -91,17 +73,9 @@ export const createOrder = async (orderData) => {
 
     await conn.query(
       `INSERT INTO orders
-       (order_id, customer_id, subtotal, status, delivery_fee, total, delivery_schedule)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [
-        order_id,
-        customer_id,
-        itemSubtotal,
-        status || "pending",
-        fee,
-        total,
-        delivery_schedule,
-      ]
+       (order_id, customer_id, subtotal, status, delivery_fee, total, delivery_schedule, payment_status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [order_id, customer_id, itemSubtotal, status || "pending", fee, total, delivery_schedule, payment_status]
     );
 
     await conn.query(
@@ -112,20 +86,20 @@ export const createOrder = async (orderData) => {
     );
 
     await conn.commit();
+    return { success: true, order_id };
 
-    return {
-      success: true,
-      order_id,
-    };
   } catch (error) {
     await conn.rollback();
     throw error;
+  } finally {
+    conn.release();
   }
 };
 
+
 export const getOrders = async () => {
   try {
-    const [results] = await db.promise().query(
+    const [results] = await db.query(
       `SELECT
           o.order_id,
           o.status,
@@ -139,14 +113,12 @@ export const getOrders = async () => {
           oi.price,
           oi.subtotal,
           o.delivery_fee,
+          o.payment_status,
           o.total
        FROM order_items oi
-       INNER JOIN orders o
-          ON oi.order_id = o.order_id
-       INNER JOIN customer c
-          ON o.customer_id = c.customer_id
-       INNER JOIN product p
-          ON oi.product_id = p.product_id`
+       INNER JOIN orders o ON oi.order_id = o.order_id
+       INNER JOIN customer c ON o.customer_id = c.customer_id
+       INNER JOIN product p ON oi.product_id = p.product_id`
     );
 
     return results;
@@ -157,7 +129,7 @@ export const getOrders = async () => {
 };
 
 export const updateOrder = async (order_id, orderData) => {
-  const conn = db.promise();
+  const conn = await db.getConnection();
 
   try {
     await conn.beginTransaction();
@@ -169,47 +141,58 @@ export const updateOrder = async (order_id, orderData) => {
       product_name,
       delivery_schedule,
       delivery_fee,
+      payment_status,
       total,
       status,
     } = orderData;
 
     await conn.query(
       `UPDATE orders
-       SET status = ?,
-           delivery_schedule = ?,
-           delivery_fee = ?,
-           total = ?
+       SET status = ?, delivery_schedule = ?, delivery_fee = ?, total = ?, payment_status = ?
        WHERE order_id = ?`,
-      [status, delivery_schedule, delivery_fee, total, order_id]
+      [status, delivery_schedule, delivery_fee, total, payment_status, order_id]
     );
 
-    await conn.query(
-      `UPDATE customer c
-       INNER JOIN orders o ON o.customer_id = c.customer_id
-       SET c.name = ?,
-           c.phone = ?,
-           c.address = ?
-       WHERE o.order_id = ?`,
-      [name, contact_num, address, order_id]
+    const [orderRows] = await conn.query(
+      `SELECT customer_id FROM orders WHERE order_id = ?`,
+      [order_id]
     );
 
-    await conn.query(
-      `UPDATE order_items oi
-       INNER JOIN product p ON p.product_name = ?
-       SET oi.product_id = p.product_id
-       WHERE oi.order_id = ?`,
-      [product_name, order_id]
+    if (orderRows.length > 0) {
+      const customer_id = orderRows[0].customer_id;
+
+      await conn.query(
+        `UPDATE customer
+         SET name = ?, phone = ?, address = ?
+         WHERE customer_id = ?`,
+        [name, contact_num, address, customer_id]
+      );
+    }
+
+    const [productRows] = await conn.query(
+      `SELECT product_id FROM product WHERE product_name = ? LIMIT 1`,
+      [product_name]
     );
+
+    if (productRows.length > 0) {
+      const product_id = productRows[0].product_id;
+
+      await conn.query(
+        `UPDATE order_items
+         SET product_id = ?
+         WHERE order_id = ?`,
+        [product_id, order_id]
+      );
+    }
 
     await conn.commit();
+    return { success: true, message: "Order updated successfully" };
 
-    return {
-      success: true,
-      message: "Order updated successfully",
-    };
   } catch (error) {
     await conn.rollback();
     console.error("Error updating order:", error);
     throw error;
+  } finally {
+    conn.release();
   }
 };

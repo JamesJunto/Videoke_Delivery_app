@@ -1,16 +1,30 @@
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { router } from "expo-router";
-
+import useOrder from "../../hooks/useOrder";
+import calculatePendingCount from "../../utils/calculatePendingCount.js"
+import calculateTodayOrderCount from "../../utils/calculateTodayOrderCount";
+import calculateUnpaidTotal from "../../utils/calculateUnpaidTotal";
 import DashboardCards from "../../components/DashboardComponents/DashboardCard";
 import PendingOrders from "../../components/DashboardComponents/PendingOrders";
 import UpcomingDeliveries from "../../components/DashboardComponents/UpcomingDeliveries";
 
 const DashboardScreen = () => {
+  const { orders } = useOrder();
+  const dateNow = new Date().toLocaleDateString("en-CA");
+
+  const pendingOrders = orders.filter((order) => order.status === "pending");
+  const pendingCount = calculatePendingCount(orders);
+  const todayOrderCount = calculateTodayOrderCount(orders, dateNow);
+  const unpaidTotal = calculateUnpaidTotal(orders);
+
   return (
     <ScrollView className="flex-1" contentContainerClassName="px-3 py-4">
-
       <View className="flex-row flex-wrap justify-between gap-y-3">
-        <DashboardCards />
+        <DashboardCards
+          pendingCount={pendingCount}
+          todayOrderCount={todayOrderCount}
+          unpaidTotal={unpaidTotal}
+        />
       </View>
 
       <View className="mt-4 w-full">
@@ -24,7 +38,7 @@ const DashboardScreen = () => {
             onPress={() => router.push("/screens/OrdersScreen")}
           >
             <Text className="text-[13px] font-medium text-[#1F5A4B]">
-              View All
+              View All · {pendingOrders.length}
             </Text>
             <Text className="ml-1 text-[13px] font-medium text-[#1F5A4B]">
               →
@@ -33,7 +47,7 @@ const DashboardScreen = () => {
         </View>
 
         <View className="flex-col justify-between mt-3 w-full gap-3">
-          <PendingOrders />
+          <PendingOrders pendingOrders={pendingOrders} />
         </View>
       </View>
 
@@ -60,7 +74,6 @@ const DashboardScreen = () => {
           <UpcomingDeliveries />
         </View>
       </View>
-
     </ScrollView>
   );
 };

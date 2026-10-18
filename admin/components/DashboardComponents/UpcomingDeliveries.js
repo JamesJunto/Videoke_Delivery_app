@@ -11,8 +11,6 @@ const UpcomingDeliveries = () => {
       address: "24 Maginhawa St., Teachers Village, QC",
     },
 
-
-
   ];
 
   return (

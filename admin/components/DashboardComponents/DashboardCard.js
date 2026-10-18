@@ -1,25 +1,26 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 
-const DashboardCards = () => {
+const DashboardCards = ({pendingCount, todayOrderCount, unpaidTotal}) => {
+
   const DashboardData = [
     {
       title: "Pending Orders",
-      value: 5,
+      value: pendingCount,
       icon: "time-outline",
       description: "Need to confirm",
     },
     {
       title: "Today's Orders",
-      value: 8,
+      value: todayOrderCount,
       icon: "calendar-outline",
       description: "Scheduled today",
     },
     {
       title: "Unpaid",
-      value: "₱4,200",
+      value: `₱${unpaidTotal.toLocaleString()}`,
       icon: "alert-circle-outline",
-      description: "From 3 orders",
+      description: `${pendingCount} Orders`,
     },
     {
       title: "Revenue",
