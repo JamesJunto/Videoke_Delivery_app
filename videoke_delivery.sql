@@ -59,6 +59,9 @@ CREATE TABLE payments (
   FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
 
+ALTER TABLE orders
+ADD COLUMN payment_status VARCHAR(20) DEFAULT 'Unpaid';
+
 ALTER TABLE product
 MODIFY COLUMN product_name VARCHAR(100)
   CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
