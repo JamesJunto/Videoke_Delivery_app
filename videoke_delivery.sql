@@ -45,3 +45,16 @@ CREATE TABLE order_items (
   FOREIGN KEY (order_id) REFERENCES orders(order_id),
   FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
+
+ALTER TABLE videoke_db.orders
+ADD COLUMN delivery_fee DECIMAL(10, 2) NOT NULL DEFAULT 0
+AFTER subtotal;
+
+ALTER TABLE videoke_db.orders
+ADD COLUMN payment_status ENUM('Unpaid', '50% paid', 'Paid')
+NOT NULL DEFAULT 'Unpaid'
+AFTER total;
+
+ALTER TABLE videoke_db.orders
+ADD COLUMN delivery_schedule DATETIME NULL
+AFTER customer_id;
