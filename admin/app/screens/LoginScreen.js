@@ -19,95 +19,64 @@ export default function Login() {
   const handleSignIn = async () => {
     try {
       await handleLogin(email, password);
-      router.replace("/screens/DashboardScreen")
+      router.replace("/screens/DashboardScreen");
     } catch (error) {
       console.log("Login Error:", error);
     }
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        padding: 20,
-        backgroundColor: "white",
-        justifyContent: "center",
-      }}
-    >
-      <Text
-        style={{
-          fontSize: 28,
-          fontWeight: "bold",
-          marginBottom: 20,
-        }}
-      >
-        Sign In
+    <View className="flex-1 justify-center bg-[#FFFDF9] px-6 py-8">
+      <Text className="mb-2 text-3xl font-bold text-[#1F5A4B]">
+        Welcome Back
       </Text>
 
+      <Text className="mb-8 text-base text-[#6B8A84]">
+        Sign in to your Videoke Delivery account
+      </Text>
+
+
+
       <TextInput
-        placeholder="Email"
+        placeholder="Enter your email"
+        placeholderTextColor="#9AA9A3"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        autoCorrect={false}
         editable={!loading}
-        style={{
-          borderWidth: 1,
-          borderColor: "#ddd",
-          padding: 12,
-          borderRadius: 6,
-          marginBottom: 12,
-        }}
+        className="mb-6 border-0 border-b border-[#B8CBC1] px-1 py-3  text-[#1F5A4B] outline-none focus:outline-none"
       />
 
       <TextInput
-        placeholder="Password"
+        placeholder="Enter your password"
+        placeholderTextColor="#9AA9A3"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
         editable={!loading}
-        style={{
-          borderWidth: 1,
-          borderColor: "#ddd",
-          padding: 12,
-          borderRadius: 6,
-          marginBottom: 12,
-        }}
+        className="mb-8 border-0 border-b border-[#B8CBC1] px-1 py-3  text-[#1F5A4B] outline-none focus:outline-none"
       />
 
       <Pressable
         onPress={handleSignIn}
         disabled={loading}
-        style={{
-          backgroundColor: "#C1272D",
-          padding: 14,
-          borderRadius: 6,
-          alignItems: "center",
-          opacity: loading ? 0.7 : 1,
-        }}
+        className={`items-center rounded-xl bg-[#1F5A4B] p-4 ${
+          loading ? "opacity-70" : "opacity-100"
+        }`}
       >
         {loading ? (
-          <ActivityIndicator color="white" />
+          <ActivityIndicator color="#FFFFFF" />
         ) : (
-          <Text
-            style={{
-              color: "white",
-              fontWeight: "bold",
-            }}
-          >
+          <Text className="text-base font-bold text-white">
             Sign In
           </Text>
         )}
       </Pressable>
 
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          marginTop: 20,
-        }}
-      >
-        <Text style={{ color: "#666" }}>
+      <View className="mt-6 flex-row justify-center">
+        <Text className="text-[#6B8A84]">
           Don't have an account?{" "}
         </Text>
 
@@ -115,7 +84,7 @@ export default function Login() {
           disabled={loading}
           onPress={() => router.push("/screens/RegisterScreen")}
         >
-          <Text style={{ color: "#C1272D", fontWeight: "bold" }}>
+          <Text className="font-bold text-[#1F5A4B]">
             Register
           </Text>
         </Pressable>

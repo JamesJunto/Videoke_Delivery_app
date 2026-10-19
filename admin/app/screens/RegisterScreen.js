@@ -16,72 +16,73 @@ const Register = () => {
 
   const { handleRegister, loading } = useAuth();
 
-
   const handleSignUp = async () => {
     try {
-      await handleRegister( email,password );
-
+      await handleRegister(email, password);
       router.replace("/screens/LoginScreen");
     } catch (error) {
       console.log("SignUp Error:", error);
     }
   };
 
-
   return (
-    <View className="flex-1 justify-center bg-white px-6">
-      <Text className="mb-2 text-3xl font-bold text-gray-900">
+    <View className="flex-1 justify-center bg-[#FFFDF9] px-6 py-8">
+      <Text className="mb-2 text-3xl font-bold text-[#1F5A4B]">
         Create Account
       </Text>
 
-      <Text className="mb-8 text-gray-500">
+      <Text className="mb-8 text-base text-[#6B8A84]">
         Sign up to get started.
       </Text>
 
       <TextInput
-        placeholder="Email"
+        placeholder="Enter your email"
+        placeholderTextColor="#9AA9A3"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        autoCorrect={false}
         editable={!loading}
-        className="mb-4 rounded-sm border border-gray-300 p-3"
+        className="mb-6 border-0 border-b border-[#B8CBC1] px-1 py-3 text-[#263B33] outline-none focus:outline-none"
       />
 
       <TextInput
-        placeholder="Password"
+        placeholder="Enter your password"
+        placeholderTextColor="#9AA9A3"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
         editable={!loading}
-        className="mb-6 rounded-sm border border-gray-300 p-3"
+        className="mb-8 border-0 border-b border-[#B8CBC1] px-1 py-3 text-[#263B33] outline-none focus:outline-none"
       />
 
       <TouchableOpacity
         onPress={handleSignUp}
         disabled={loading}
-        className="items-center rounded-md bg-[#C1272D] p-3"
-        style={{ opacity: loading ? 0.7 : 1 }}
+        className={`items-center rounded-xl bg-[#1F5A4B] p-4 ${
+          loading ? "opacity-70" : "opacity-100"
+        }`}
       >
         {loading ? (
-          <ActivityIndicator color="white" />
+          <ActivityIndicator color="#FFFFFF" />
         ) : (
-          <Text className="font-bold text-white">
+          <Text className="text-base font-bold text-white">
             Sign Up
           </Text>
         )}
       </TouchableOpacity>
 
       <View className="mt-6 flex-row justify-center">
-        <Text className="text-gray-500">
+        <Text className="text-[#6B8A84]">
           Already have an account?{" "}
         </Text>
 
         <TouchableOpacity
           disabled={loading}
-          onPress={() => router.push("/login")}
+          onPress={() => router.push("/screens/LoginScreen")}
         >
-          <Text className="font-bold text-[#C1272D]">
+          <Text className="font-bold text-[#1F5A4B]">
             Log In
           </Text>
         </TouchableOpacity>
