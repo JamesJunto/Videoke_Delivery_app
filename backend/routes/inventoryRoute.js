@@ -2,7 +2,8 @@ import express from "express";
 import {
   getInventory,
   createInventory,
-  updateInventory
+  updateInventory,
+  deleteInventory
 } from "../services/inventoryServices.js";
 
 const router = express.Router();
@@ -48,5 +49,23 @@ router.put("/:product_id", async (req, res) => {
     });
   }
 })
+
+router.delete("/:product_id", async (req, res) => {
+  try {
+    const { product_id } = req.params;
+
+    await deleteInventory(product_id);
+
+    res.status(200).json({
+      message: "Inventory item deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting inventory:", error);
+
+    res.status(500).json({
+      message: "Error deleting inventory item",
+    });
+  }
+});
 
 export default router;

@@ -1,7 +1,7 @@
 const calculateRevenue = (orders) => {
   return orders.reduce(
     (sum, order) =>
-      order.status === "delivered"
+      (order.payment_status === "Paid" || order.payment_status === "Paid")
         ? sum + Number(order.total)
         : sum,
     0

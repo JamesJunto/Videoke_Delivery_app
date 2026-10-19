@@ -255,7 +255,7 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
                     onChangeText={(v) => setField("name", v)}
                     placeholder="Juan Dela Cruz"
                     placeholderTextColor="#A0B5B0"
-                    className="rounded-[12px] border border-[#E6EFE7] bg-white px-4 py-3 text-[14px] text-[#1F5A4B]"
+                    className="rounded-[12px] border border-[#E6EFE7]  bg-[#FFFDF9] px-4 py-3 text-[14px] text-[#1F5A4B]"
                   />
                 </Field>
 
@@ -266,7 +266,7 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
                     placeholder="0917 123 4567"
                     placeholderTextColor="#A0B5B0"
                     keyboardType="phone-pad"
-                    className="rounded-[12px] border border-[#E6EFE7] bg-white px-4 py-3 text-[14px] text-[#1F5A4B]"
+                    className="rounded-[12px] border border-[#E6EFE7] bg-[#FFFDF9] px-4 py-3 text-[14px] text-[#1F5A4B]"
                   />
                 </Field>
 
@@ -278,7 +278,7 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
                     placeholderTextColor="#A0B5B0"
                     multiline
                     numberOfLines={2}
-                    className="rounded-[12px] border border-[#E6EFE7] bg-white px-4 py-3 text-[14px] text-[#1F5A4B]"
+                    className="rounded-[12px] border border-[#E6EFE7] bg-[#FFFDF9] px-4 py-3 text-[14px] text-[#1F5A4B]"
                     style={{ minHeight: 60, textAlignVertical: "top" }}
                   />
                 </Field>
@@ -286,7 +286,7 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
                 <Field label="Product">
                   <Pressable
                     onPress={() => setProductModalVisible(true)}
-                    className="flex-row items-center justify-between rounded-[12px] border border-[#E6EFE7] bg-white px-4 py-3"
+                    className="flex-row items-center justify-between rounded-[12px] border border-[#E6EFE7] bg-[#FFFDF9] px-4 py-3"
                   >
                     <Text
                       className={`flex-1 text-[14px] ${
@@ -307,14 +307,14 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
                     placeholderTextColor="#A0B5B0"
                     multiline
                     numberOfLines={3}
-                    className="rounded-[12px] border border-[#E6EFE7] bg-white px-4 py-3 text-[14px] text-[#1F5A4B]"
+                    className="rounded-[12px] border border-[#E6EFE7] bg-[#FFFDF9] px-4 py-3 text-[14px] text-[#1F5A4B]"
                     style={{ minHeight: 80, textAlignVertical: "top" }}
                   />
                 </Field>
 
                 <Field label="Delivery Schedule">
                   {Platform.OS === "web" ? (
-                    <View className="rounded-[12px] border border-[#E6EFE7] bg-white px-4 py-3">
+                    <View className="rounded-[12px] border border-[#E6EFE7] bg-[#FFFDF9] px-4 py-3">
                       <input
                         type="date"
                         min={new Date().toLocaleDateString("en-CA")}
@@ -339,7 +339,7 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
                     <>
                       <Pressable
                         onPress={() => setShowDatePicker(true)}
-                        className="flex-row items-center justify-between rounded-[12px] border border-[#E6EFE7] bg-white px-4 py-3"
+                        className="flex-row items-center justify-between rounded-[12px] border border-[#E6EFE7] bg-[#FFFDF9] px-4 py-3"
                       >
                         <Text
                           className={`text-[14px] ${
@@ -395,7 +395,7 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
                     placeholder="0"
                     placeholderTextColor="#A0B5B0"
                     keyboardType="numeric"
-                    className="rounded-[12px] border border-[#E6EFE7] bg-white px-4 py-3 text-[14px] text-[#1F5A4B]"
+                    className="rounded-[12px] border border-[#E6EFE7] bg-[#FFFDF9] px-4 py-3 text-[14px] text-[#1F5A4B]"
                   />
                 </Field>
 
@@ -406,7 +406,7 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
                     placeholder="0"
                     placeholderTextColor="#A0B5B0"
                     keyboardType="numeric"
-                    className="rounded-[12px] border border-[#E6EFE7] bg-white px-4 py-3 text-[14px] text-[#1F5A4B]"
+                    className="rounded-[12px] border border-[#E6EFE7] bg-[#FFFDF9] px-4 py-3 text-[14px] text-[#1F5A4B]"
                   />
                 </Field>
 
@@ -441,7 +441,7 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
                 <Pressable
                   onPress={onClose}
                   disabled={saving}
-                  className="flex-1 items-center justify-center rounded-[12px] border border-[#E6EFE7] bg-white px-4 py-3"
+                  className="flex-1 items-center justify-center rounded-[12px] border border-[#E6EFE7]  bg-[#FFFDF9] px-4 py-3"
                 >
                   <Text className="text-[14px] font-semibold text-[#1F5A4B]">
                     Cancel

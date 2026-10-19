@@ -1,5 +1,10 @@
-import { useState, useEffect, useCallback  } from "react";
-import { getInventory, addInventoryItem, updateInventoryItem } from"../services/inventoryServices";
+import { useState, useEffect, useCallback } from "react";
+import {
+  getInventory,
+  addInventoryItem,
+  updateInventoryItem,
+  deleteInventoryItem,
+} from "../services/inventoryServices";
 
 const useInventory = () => {
   const [items, setItem] = useState([]);
@@ -24,12 +29,20 @@ const useInventory = () => {
   }, [fetchInventory]);
 
   const handleAddInventory = async (inventory) => {
-    const response = await addInventoryItem(inventory);
-    return response;
+    return await addInventoryItem(inventory);
   };
 
   const handleUpdateInventory = async (product_id, updatedInventory) => {
-    const response = await updateInventoryItem(product_id, updatedInventory);
+    return await updateInventoryItem(product_id, updatedInventory);
+  };
+
+  const handleDeleteInventory = async (product_id) => {
+    const response = await deleteInventoryItem(product_id);
+
+    setItem((prev) =>
+      prev.filter((item) => item.product_id !== product_id)
+    );
+
     return response;
   };
 
@@ -40,6 +53,7 @@ const useInventory = () => {
     fetchInventory,
     handleAddInventory,
     handleUpdateInventory,
+    handleDeleteInventory,
   };
 };
 

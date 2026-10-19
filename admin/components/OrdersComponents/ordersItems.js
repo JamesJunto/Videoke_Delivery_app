@@ -1,4 +1,4 @@
-import { Text, View, Pressable, ActivityIndicator } from "react-native";
+import { Alert, Text, View, Pressable, ActivityIndicator } from "react-native";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import OrderDetailsModal from "./OrderItemsModal";
@@ -8,7 +8,41 @@ import OrderEditModal from "./OrderEditModal";
 const OrdersItems = ({ filteredStatus, searchQuery = "" }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [editOrder, setEditOrder] = useState(null);
-  const { orders, loading, fetchOrders } = useOrder();
+  const { orders, loading, fetchOrders, handleDeleteOrder } = useOrder();
+
+  const DeleteOrder = async (order) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete order ${order.order_id}?`
+    );
+
+    /*
+    // kani gamiton kung mobile na e run
+    Alert.alert(
+      "Delete Order",
+      `Are you sure you want to delete order ${order.order_id}?`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            await deleteOrder(order.order_id);
+            await fetchOrders();
+          },
+        },
+      ]
+    );
+    */
+
+    if (!confirmed) return;
+
+    try {
+      await handleDeleteOrder(order.order_id);
+      await fetchOrders();
+    } catch (error) {
+      window.alert("Failed to delete order.");
+    }
+  };
 
   const filteredOrders = orders.filter((order) => {
     const statusMatch =
@@ -114,15 +148,27 @@ const OrdersItems = ({ filteredStatus, searchQuery = "" }) => {
                 ₱{Number(order.total || 0).toLocaleString()}
               </Text>
 
-              <Pressable
-                onPress={() => setEditOrder(order)}
-                hitSlop={8}
-                className="rounded-[10px] bg-[#E6EFE7] px-3 py-1.5 active:opacity-70"
-              >
-                <Text className="text-[14px] font-semibold text-[#1F5A4B]">
-                  Edit Order
-                </Text>
-              </Pressable>
+              <View className="flex-row items-center gap-2">
+                <Pressable
+                  onPress={() => setEditOrder(order)}
+                  hitSlop={8}
+                  className="rounded-[10px] bg-[#E6EFE7] px-3 py-1.5 active:opacity-70"
+                >
+                  <Text className="text-[14px] font-semibold text-[#1F5A4B]">
+                    Edit Order
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  onPress={() => DeleteOrder(order)}
+                  hitSlop={8}
+                  className="rounded-[10px] border border-[#F0D6D6] bg-red-50 px-3 py-1.5 active:opacity-70"
+                >
+                  <Text className="text-[14px] font-semibold text-[#A33A3A]">
+                    Delete
+                  </Text>
+                </Pressable>
+              </View>
             </View>
           </View>
         );

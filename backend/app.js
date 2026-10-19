@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import express from "express";
-import customerRoute from "./routes/customerRoute.js";
 import inventoryRoute from "./routes/inventoryRoute.js";
 import ordersRoute from "./routes/ordersRoute.js"
 import authRoutes from "./routes/authRoutes.js"
@@ -15,7 +14,6 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", rateLimiter, authRoutes);
-app.use("/api/customers", authMiddleware, customerRoute);
 app.use("/api/inventory", authMiddleware, inventoryRoute);
 app.use("/api/orders", authMiddleware, ordersRoute);
 

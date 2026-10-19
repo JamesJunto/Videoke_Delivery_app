@@ -1,5 +1,5 @@
 import express from 'express'
-import {  createOrder, getOrders, updateOrder} from '../services/ordersServices.js';
+import {  createOrder, getOrders, updateOrder, deleteOrder} from '../services/ordersServices.js';
 const router = express.Router()
 
 router.post("/", async (req, res) => {
@@ -48,4 +48,22 @@ router.put("/:order_id", async (req, res) => {
     });
   }
 })
+
+router.delete("/:order_id", async (req, res) => {
+  try {
+    const { order_id } = req.params;
+
+    await deleteOrder(order_id);
+
+    res.status(200).json({
+      message: "Order deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting order:", error);
+
+    res.status(500).json({
+      message: "Error deleting order",
+    });
+  }
+});
 export default router

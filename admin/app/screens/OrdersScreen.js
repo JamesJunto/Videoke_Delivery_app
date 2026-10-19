@@ -7,7 +7,6 @@ import useOrder from "../../hooks/useOrder";
 const filters = [
   { label: "All", value: "All" },
   { label: "Pending", value: "pending" },
-  { label: "Active", value: "active" },
   { label: "Closed", value: "closed" },
 ];
 

@@ -19,10 +19,11 @@
      title: "Customers",
      subtitle: "Customer list & history",
    },
-   "/screens/ReportsScreen": {
+   "/screens/SalesReportScreen": {
      title: "Reports",
      subtitle: "Sales & activity reports",
    },
+
  };
 
  export const DEFAULT_SCREEN = {

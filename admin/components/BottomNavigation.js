@@ -70,7 +70,26 @@ const BottomNavigation = () => {
         </Text>
       </Pressable>
 
-
+      <Pressable
+        className="flex-1 items-center justify-center px-1"
+        onPress={() => router.push("/screens/SalesReportScreen")}
+      >
+        <Ionicons
+          name="bar-chart-outline"
+          size={20}
+          color={pathname === "/screens/SalesReportScreen" ? "#1F5A4B" : "#000000"}
+        />
+        <Text
+          numberOfLines={1}
+          className={`mt-0.5 text-[11px] font-medium ${
+            pathname === "/screens/SalesReportScreen"
+              ? "text-[#1F5A4B]"
+              : "text-black"
+          }`}
+        >
+          Reports
+        </Text>
+      </Pressable>
     </View>
   );
 };

@@ -1,14 +1,57 @@
-
-import { Text, View, Pressable, ActivityIndicator } from "react-native";
+import {
+  Alert,
+  Text,
+  View,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { useState } from "react";
 import useInventory from "../../hooks/useInventory";
 import ItemsEditModal from "./itemsEditModal";
 
 const InventoryItems = ({ searchQuery = "" }) => {
-  const { items, loading, error, fetchInventory} = useInventory();
+  const { items, loading, error, fetchInventory, handleDeleteInventory } = useInventory();
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const DeleteItem = async (item) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${item.product_name}"? This action cannot be undone.`
+    );
+
+    /*
+    // if mobile gamit ni Alert.alert():
+    Alert.alert(
+      "Delete Package",
+      `Are you sure you want to delete "${item.product_name}"? This action cannot be undone.`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            //try {
+              await handleDelete(item.product_id)
+              await fetchInventory();
+            } catch (error) {
+              window.alert("Failed to delete package.");
+            }
+          },
+        },
+      ]
+    );
+    */
+
+    if (!confirmed) return;
+
+    try {
+      await  handleDeleteInventory(item.product_id)
+      await fetchInventory();
+    } catch (error) {
+      window.alert("Failed to delete package.");
+    }
+  };
 
   const filteredItems = items.filter((item) => {
     const searchMatch =
@@ -131,17 +174,29 @@ const InventoryItems = ({ searchQuery = "" }) => {
                 </Text>
               </View>
 
-              <Pressable
-                onPress={() => {
-                  setSelectedItem(item);
-                  setModalVisible(true);
-                }}
-                className="rounded-[10px] bg-[#E6EFE7] px-4 py-2 active:opacity-70"
-              >
-                <Text className="text-[13px] font-semibold text-[#1F5A4B]">
-                  Edit package
-                </Text>
-              </Pressable>
+              <View className="flex-row items-center gap-2">
+                <Pressable
+                  onPress={() => {
+                    setSelectedItem(item);
+                    setModalVisible(true);
+                  }}
+                  className="rounded-[10px] bg-[#E6EFE7] px-3 py-2 active:opacity-70"
+                >
+                  <Text className="text-[13px] font-semibold text-[#1F5A4B]">
+                    Edit package
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  onPress={() => DeleteItem(item)}
+                  hitSlop={8}
+                  className="rounded-[10px] border border-[#F0D6D6] bg-red-50 px-3 py-2 active:opacity-70"
+                >
+                  <Text className="text-[13px] font-semibold text-[#A33A3A]">
+                    Delete
+                  </Text>
+                </Pressable>
+              </View>
             </View>
           </View>
         );
@@ -153,7 +208,7 @@ const InventoryItems = ({ searchQuery = "" }) => {
         onClose={() => {
           setModalVisible(false);
           setSelectedItem(null);
-          fetchInventory()
+          fetchInventory();
         }}
       />
     </>

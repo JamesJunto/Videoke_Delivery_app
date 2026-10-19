@@ -4,7 +4,7 @@ export const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: 'jamesrainier123',
-    database: 'videoke_delivery',
+    database: 'videoke_db',
     connectionLimit: 10
 });
 

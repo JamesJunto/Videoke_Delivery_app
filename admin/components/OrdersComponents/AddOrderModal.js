@@ -206,7 +206,7 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
                 placeholderTextColor="#A8BFB9"
                 value={form.name}
                 onChangeText={(text) => updateField("name", text)}
-                className="mb-3 rounded-[8px] border border-[#E6EFE7] bg-white px-3 py-2.5 text-[14px] text-[#1F5A4B]"
+                className="mb-3 rounded-[8px] border border-[#E6EFE7]  bg-[#FFFDF9] px-3 py-2.5 text-[14px] text-[#1F5A4B]"
               />
 
               <Text className="mb-1 text-[11px] text-[#6B8A84]">
@@ -218,7 +218,7 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
                 keyboardType="phone-pad"
                 value={form.contact_num}
                 onChangeText={(text) => updateField("contact_num", text)}
-                className="mb-3 rounded-[8px] border border-[#E6EFE7] bg-white px-3 py-2.5 text-[14px] text-[#1F5A4B]"
+                className="mb-3 rounded-[8px] border border-[#E6EFE7]  bg-[#FFFDF9] px-3 py-2.5 text-[14px] text-[#1F5A4B]"
               />
 
               <Text className="mb-1 text-[11px] text-[#6B8A84]">
@@ -230,7 +230,7 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
                 value={form.address}
                 onChangeText={(text) => updateField("address", text)}
                 multiline
-                className="rounded-[8px] border border-[#E6EFE7] bg-white px-3 py-2.5 text-[14px] text-[#1F5A4B]"
+                className="rounded-[8px] border border-[#E6EFE7]  bg-[#FFFDF9] px-3 py-2.5 text-[14px] text-[#1F5A4B]"
               />
             </View>
 
@@ -252,7 +252,7 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
               </Text>
               <Pressable
                 onPress={() => setProductModalVisible(true)}
-                className="mb-3 flex-row items-center justify-between rounded-[8px] border border-[#E6EFE7] bg-white px-3 py-3"
+                className="mb-3 flex-row items-center justify-between rounded-[8px] border border-[#E6EFE7]  bg-[#FFFDF9] px-3 py-3"
               >
                 <Text
                   className={`flex-1 text-[14px] ${
@@ -274,7 +274,7 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
                 value={form.description}
                 onChangeText={(text) => updateField("description", text)}
                 multiline
-                className="mb-3 rounded-[8px] border border-[#E6EFE7] bg-white px-3 py-2.5 text-[14px] text-[#1F5A4B]"
+                className="mb-3 rounded-[8px] border border-[#E6EFE7] bg-[#FFFDF9] px-3 py-2.5 text-[14px] text-[#1F5A4B]"
               />
 
               <Text className="mb-1 text-[11px] text-[#6B8A84]">
@@ -283,7 +283,7 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
 
 
               {Platform.OS === "web" ? (
-                <View className="rounded-[8px] border border-[#E6EFE7] bg-white px-3 py-2.5">
+                <View className="rounded-[8px] border border-[#E6EFE7]  bg-[#FFFDF9] px-3 py-2.5">
                   <input
                     type="date"
                     min={new Date().toLocaleDateString("en-CA")}
@@ -311,7 +311,7 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
                 <>
                   <Pressable
                     onPress={() => setShowDatePicker(true)}
-                    className="flex-row items-center justify-between rounded-[8px] border border-[#E6EFE7] bg-white px-3 py-3"
+                    className="flex-row items-center justify-between rounded-[8px] border border-[#E6EFE7] bg-[#FFFDF9] px-3 py-3"
                   >
                     <Text
                       className={`text-[14px] ${
@@ -373,7 +373,7 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
                     total: String(total),
                   }));
                 }}
-                className="mb-3 rounded-[8px] border border-[#E6EFE7] bg-white px-3 py-2.5 text-[14px] text-[#1F5A4B]"
+                className="mb-3 rounded-[8px] border border-[#E6EFE7] bg-[#FFFDF9] px-3 py-2.5 text-[14px] text-[#1F5A4B]"
               />
 
               <Text className="mb-1 text-[11px] text-[#6B8A84]">
@@ -381,11 +381,14 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
               </Text>
               <TextInput
                 editable={false}
-                placeholder="1800"
+                placeholder="500"
+                style={{
+                   paddingHorizontal: 12,
+                 }}
                 placeholderTextColor="#A8BFB9"
                 keyboardType="numeric"
                 value={form.total}
-                className="mb-3 rounded-[8px] border border-[#E6EFE7] bg-white px-3 py-2.5 text-[14px] text-[#1F5A4B]"
+                className="mb-3 rounded-[8px] border border-[#E6EFE7]   bg-[#FFFDF9]px-3 py-2.5 text-[14px] text-[#1F5A4B]"
               />
 
               <Text className="mb-1 text-[11px] text-[#6B8A84]">

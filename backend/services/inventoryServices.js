@@ -41,3 +41,21 @@ export const updateInventory = async (product_id, updatedInventory) => {
     throw error;
   }
 };
+
+export const deleteInventory = async (product_id) => {
+  try {
+    const [result] = await db.query(
+      "DELETE FROM product WHERE product_id = ?",
+      [product_id]
+    );
+
+    if (result.affectedRows === 0) {
+      throw new Error("Inventory item not found.");
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Error deleting inventory:", error);
+    throw error;
+  }
+};
