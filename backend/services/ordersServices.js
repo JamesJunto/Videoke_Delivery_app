@@ -18,9 +18,6 @@ export const createOrder = async (orderData) => {
       contact_num,
       address,
       product_name,
-      delivery_schedule,
-      delivery_fee = 0,
-      payment_status = "Unpaid",
       status = "pending",
     } = orderData;
 
@@ -64,14 +61,12 @@ export const createOrder = async (orderData) => {
 
     const productId = products[0].product_id;
     const price = Number(products[0].price);
-    const fee = Number(delivery_fee);
-
-    if (!Number.isFinite(price) || price < 0 || !Number.isFinite(fee) || fee < 0) {
-      throw new Error("Invalid product price or delivery fee.");
+    if (!Number.isFinite(price) || price < 0) {
+      throw new Error("Invalid product price.");
     }
 
     const subtotal = price;
-    const total = subtotal + fee;
+    const total = subtotal;
     const [stockResult] = await connection.query(
       `UPDATE product
        SET stock = stock - 1
@@ -95,19 +90,6 @@ export const createOrder = async (orderData) => {
       [order_id, productId, 1, price, subtotal]
     );
 
-    await connection.query(
-      `INSERT INTO deliveries
-       (order_id, delivery_address, delivery_schedule, delivery_fee)
-       VALUES (?, ?, ?, ?)`,
-      [order_id, address, delivery_schedule || null, fee]
-    );
-
-    await connection.query(
-      `INSERT INTO payments (order_id, amount_paid, payment_status)
-       VALUES (?, ?, ?)`,
-      [order_id, 0, payment_status]
-    );
-
     await connection.commit();
     return { success: true, order_id };
   } catch (error) {
@@ -127,20 +109,15 @@ export const getOrders = async () => {
         c.phone,
         p.product_name,
         p.description,
-        d.delivery_schedule,
-        d.delivery_address AS address,
+        c.address,
         oi.quantity,
         oi.price,
         oi.subtotal,
-        d.delivery_fee,
-        pay.payment_status,
         o.total
      FROM orders o
      INNER JOIN order_items oi ON oi.order_id = o.order_id
      INNER JOIN customer c ON o.customer_id = c.customer_id
      INNER JOIN product p ON oi.product_id = p.product_id
-     LEFT JOIN deliveries d ON d.order_id = o.order_id
-     LEFT JOIN payments pay ON pay.order_id = o.order_id
      ORDER BY o.created_at DESC`
   );
 
@@ -158,16 +135,8 @@ export const updateOrder = async (orderId, orderData) => {
       contact_num,
       address,
       product_name,
-      delivery_schedule,
-      delivery_fee = 0,
-      payment_status,
       status = "pending",
     } = orderData;
-    const fee = Number(delivery_fee);
-
-    if (!Number.isFinite(fee) || fee < 0) {
-      throw new Error("Invalid delivery fee.");
-    }
 
     const [orderRows] = await connection.query(
       "SELECT customer_id FROM orders WHERE order_id = ?",
@@ -198,7 +167,7 @@ export const updateOrder = async (orderId, orderData) => {
       `UPDATE orders
        SET status = ?, subtotal = ?, total = ?
        WHERE order_id = ?`,
-      [status, price, price + fee, orderId]
+      [status, price, price, orderId]
     );
     await connection.query(
       `UPDATE order_items
@@ -206,20 +175,6 @@ export const updateOrder = async (orderId, orderData) => {
        WHERE order_id = ?`,
       [productRows[0].product_id, price, price, orderId]
     );
-    await connection.query(
-      `UPDATE deliveries
-       SET delivery_address = ?, delivery_schedule = ?, delivery_fee = ?
-       WHERE order_id = ?`,
-      [address, delivery_schedule || null, fee, orderId]
-    );
-
-    if (payment_status !== undefined) {
-      await connection.query(
-        "UPDATE payments SET payment_status = ? WHERE order_id = ?",
-        [payment_status, orderId]
-      );
-    }
-
     await connection.commit();
     return { success: true, message: "Order updated successfully" };
   } catch (error) {

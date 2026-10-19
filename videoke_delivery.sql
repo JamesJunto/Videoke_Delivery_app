@@ -45,24 +45,3 @@ CREATE TABLE order_items (
   FOREIGN KEY (order_id) REFERENCES orders(order_id),
   FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
-
-CREATE TABLE deliveries (
-  delivery_id        INT AUTO_INCREMENT PRIMARY KEY,
-  order_id           VARCHAR(20) NOT NULL,
-  delivery_address   TEXT NOT NULL,
-  delivery_schedule  VARCHAR(100),
-  delivery_fee       DECIMAL(10, 2) NOT NULL DEFAULT 0,
-  delivered_at       TIMESTAMP NULL,
-  status             VARCHAR(20) NOT NULL DEFAULT 'pending',
-  FOREIGN KEY (order_id) REFERENCES orders(order_id)
-);
-
-CREATE TABLE payments (
-  payment_id      INT AUTO_INCREMENT PRIMARY KEY,
-  order_id        VARCHAR(20) NOT NULL,
-  amount_paid     DECIMAL(10, 2) NOT NULL DEFAULT 0,
-  payment_method  VARCHAR(20),
-  payment_status  VARCHAR(20) NOT NULL DEFAULT 'Unpaid',
-  paid_at         TIMESTAMP NULL,
-  FOREIGN KEY (order_id) REFERENCES orders(order_id)
-);
