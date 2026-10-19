@@ -2,9 +2,9 @@
 import { db } from "../db.js";
 import bcrypt from "bcrypt";
 
-export const getCustomerAccount = async (email, password) => {
+export const getAdminAccount = async (email, password) => {
   const [rows] = await db.query(
-    "SELECT * FROM customer_acc WHERE email = ?",
+    "SELECT * FROM admin_acc WHERE email = ?",
     [email]
   );
 
@@ -25,12 +25,12 @@ export const getCustomerAccount = async (email, password) => {
   return account;
 };
 
-export const AddAccount = async (email, password) => {
+export const addAdminAccount = async (email, password) => {
   try {
     const hashPassword = await bcrypt.hash(password, 10);
 
     const [result] = await db.query(
-      `INSERT INTO customer_acc
+      `INSERT INTO admin_acc
        (email, password_hash)
        VALUES (?, ?)`,
       [email, hashPassword]

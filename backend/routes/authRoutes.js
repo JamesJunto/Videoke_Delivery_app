@@ -1,6 +1,6 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import { AddAccount, getCustomerAccount } from "../services/authService.js";
+import { addAdminAccount, getAdminAccount } from "../services/authService.js";
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const account = await getCustomerAccount(email, password);
+    const account = await getAdminAccount(email, password);
 
     if (!account) {
       return res.status(401).json({
@@ -19,7 +19,7 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const payload = { id: account.customer_id }
+    const payload = { id: account.admin_id, role: "admin" };
     const AccessToken = jwt.sign(payload, ACCESS_TOKEN_KEY)
 
     return res.status(200).json({
@@ -41,7 +41,7 @@ router.post("/register", async (req, res) => {
   const {email, password } = req.body;
 
   try {
-    await AddAccount( email, password);
+    await addAdminAccount(email, password);
 
     return res.status(201).json({
       message: "Registration successful",
