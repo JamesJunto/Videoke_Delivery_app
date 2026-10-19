@@ -4,6 +4,7 @@ import useOrder from "../../hooks/useOrder";
 import calculatePendingCount from "../../utils/calculatePendingCount.js"
 import calculateTodayOrderCount from "../../utils/calculateTodayOrderCount";
 import calculateUnpaidTotal from "../../utils/calculateUnpaidTotal";
+import calculateRevenue from "../../utils/calculateRevenue.js";
 import DashboardCards from "../../components/DashboardComponents/DashboardCard";
 import PendingOrders from "../../components/DashboardComponents/PendingOrders";
 import UpcomingDeliveries from "../../components/DashboardComponents/UpcomingDeliveries";
@@ -16,6 +17,7 @@ const DashboardScreen = () => {
   const pendingCount = calculatePendingCount(orders);
   const todayOrderCount = calculateTodayOrderCount(orders, dateNow);
   const unpaidTotal = calculateUnpaidTotal(orders);
+  const totalRevenue = calculateRevenue(orders)
 
   return (
     <ScrollView className="flex-1" contentContainerClassName="px-3 py-4">
@@ -24,6 +26,7 @@ const DashboardScreen = () => {
           pendingCount={pendingCount}
           todayOrderCount={todayOrderCount}
           unpaidTotal={unpaidTotal}
+          totalRevenue={totalRevenue}
         />
       </View>
 
