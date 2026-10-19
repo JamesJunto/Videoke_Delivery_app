@@ -49,3 +49,8 @@ CREATE TABLE order_items (
 ALTER TABLE videoke_db.orders
 ADD COLUMN delivery_fee DECIMAL(10, 2) NOT NULL DEFAULT 0
 AFTER subtotal;
+
+ALTER TABLE videoke_db.orders
+ADD COLUMN payment_status ENUM('Unpaid', '50% paid', 'Paid')
+NOT NULL DEFAULT 'Unpaid'
+AFTER total;
