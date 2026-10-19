@@ -45,3 +45,7 @@ CREATE TABLE order_items (
   FOREIGN KEY (order_id) REFERENCES orders(order_id),
   FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
+
+ALTER TABLE videoke_db.orders
+ADD COLUMN delivery_fee DECIMAL(10, 2) NOT NULL DEFAULT 0
+AFTER subtotal;
