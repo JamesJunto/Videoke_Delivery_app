@@ -11,13 +11,18 @@ const splitName = (value) => {
 };
 
 const validateDeliverySchedule = (value) => {
-  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(String(value))) {
-    throw new Error("Invalid delivery schedule. Use YYYY-MM-DD.");
+  if (!value) {
+    throw new Error("Delivery schedule is required.");
   }
 
-  return String(value);
-};
+  const parsedDate = new Date(value);
 
+  if (isNaN(parsedDate.getTime())) {
+    throw new Error("Invalid delivery schedule format.");
+  }
+
+  return parsedDate.toISOString().split('T')[0];
+};
 export const createOrder = async (orderData) => {
   const connection = await db.getConnection();
 
