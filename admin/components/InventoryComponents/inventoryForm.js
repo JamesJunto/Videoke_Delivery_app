@@ -66,7 +66,7 @@ const InventoryForm = ({ onClose, refetch }) => {
       const res = await handleAddInventory(newInventory);
       console.log("Added new inventory:", res);
 
-      fetchInventory()
+      await refetch()
       resetForm();
       onClose();
     } catch (err) {

@@ -56,7 +56,7 @@ const AddProductModal = ({ visible, onClose, refetch }) => {
                 paddingBottom: 12,
               }}
             >
-              <InventoryForm onClose={onClose} />
+              <InventoryForm onClose={onClose} refetch={refetch} />
             </ScrollView>
 
           </View>

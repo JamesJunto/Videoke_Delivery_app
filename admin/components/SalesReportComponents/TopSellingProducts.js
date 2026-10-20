@@ -4,32 +4,39 @@ import { Pressable, Text, View } from "react-native";
 const TopSellingProduct = ({ orders = [], date }) => {
   const [showAll, setShowAll] = useState(false);
 
+  const targetDate = date ? String(date).slice(0, 10) : "";
+
   const deliveredOrders = orders.filter((order) => {
+    if (!order.delivery_schedule) return false;
+
     const scheduleDate = new Date(order.delivery_schedule).toLocaleDateString("en-CA");
-    return scheduleDate === date && order.status === "delivered";
-  });
+    const orderStatus = String(order.status || "").trim().toLowerCase();
+
+    return scheduleDate === targetDate && orderStatus === "delivered";
+  })
 
   const productMap = deliveredOrders.reduce((acc, order) => {
-    const productName = order.product_name || order.productName || order.name || "Unknown Product";
-    const quantity = Number(order.quantity) || 1;
-    const totalAmount = Number(order.total) || 0;
+    const productName = order.product_name || order.productName;
+
+    if (!productName) return acc;
 
     if (!acc[productName]) {
       acc[productName] = {
         name: productName,
-        sold: 0,
+        orders: 0,
         revenue: 0,
       };
     }
 
-    acc[productName].sold += quantity;
-    acc[productName].revenue += totalAmount;
+    acc[productName].orders += 1;
+
+    acc[productName].revenue += Number(order.subtotal) || 0;
 
     return acc;
   }, {});
 
   const sortedProducts = Object.values(productMap)
-    .sort((a, b) => b.sold - a.sold)
+    .sort((a, b) => b.orders - a.orders)
     .map((product, index) => ({
       ...product,
       id: index.toString(),
@@ -72,10 +79,10 @@ const TopSellingProduct = ({ orders = [], date }) => {
                     <Text className="text-[#1F5A4B] text-[12px] font-bold">Top {index + 1}</Text>
                   </View>
                 </View>
-                <Text className="text-[#6B8F82] text-[15px]">{product.sold} Units Sold</Text>
+                <Text className="text-[#6B8F82] text-[15px]">{product.orders} Orders</Text>
               </View>
               <View className="items-end">
-                  <Text className="font-bold text-[18px] text-[#1F5A4B]">{product.formattedRevenue}</Text>
+                <Text className="font-bold text-[18px] text-[#1F5A4B]">{product.formattedRevenue}</Text>
               </View>
             </View>
           ))
@@ -84,4 +91,5 @@ const TopSellingProduct = ({ orders = [], date }) => {
     </View>
   );
 };
-export default TopSellingProduct
+
+export default TopSellingProduct;

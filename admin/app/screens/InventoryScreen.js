@@ -3,8 +3,9 @@ import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import InventoryItems from "../../components/InventoryComponents/InventoryItems";
 import AddProductModal from "../../components/InventoryComponents/AddProductModal";
-
+import useInventory from "../../hooks/useInventory";
 const InventoryScreen = () => {
+  const { fetchInventory } = useInventory()
   const [formVisible, setFormVisible] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -34,6 +35,7 @@ const InventoryScreen = () => {
       {formVisible && (
         <AddProductModal
           visible={formVisible}
+          refetch={fetchInventory}
           onClose={() => setFormVisible(false)}
         />
       )}

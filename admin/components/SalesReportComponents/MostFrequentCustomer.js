@@ -1,92 +1,94 @@
-import React from "react";
-import { Text, View } from "react-native";
+import React, { useState } from "react";
+import { Pressable, Text, View } from "react-native";
 
-const MostFrequentCustomer = ({ orders = [], date }) => {
+const TopSellingProduct = ({ orders = [], date }) => {
+  const [showAll, setShowAll] = useState(false);
+
+  const targetDate = date ? String(date).slice(0, 10) : "";
+
   const deliveredOrders = orders.filter((order) => {
     if (!order.delivery_schedule) return false;
 
-    const scheduleDate = new Date(
-      order.delivery_schedule
-    ).toLocaleDateString("en-CA");
+    const scheduleDate = new Date(order.delivery_schedule).toLocaleDateString("en-CA");
+    const orderStatus = String(order.status || "").trim().toLowerCase();
 
-    return (
-      scheduleDate === date &&
-      order.status === "delivered"
-    );
+    return scheduleDate === targetDate && orderStatus === "delivered";
   });
 
-  const customerMap = deliveredOrders.reduce((acc, order) => {
-    const customerName = order.name || "Unknown Customer";
+  const productMap = deliveredOrders.reduce((acc, order) => {
+    const productName = order.product_name || order.productName;
 
-    if (!acc[customerName]) {
-      acc[customerName] = {
-        name: customerName,
+    if (!productName) return acc;
+
+    if (!acc[productName]) {
+      acc[productName] = {
+        name: productName,
         orders: 0,
-        totalSpent: 0,
+        revenue: 0,
       };
     }
 
-    acc[customerName].orders += 1;
-    acc[customerName].totalSpent += Number(order.total) || 0;
+    acc[productName].orders += 1;
+    acc[productName].revenue += Number(order.subtotal) || 0;
 
     return acc;
   }, {});
 
-  const sortedCustomers = Object.values(customerMap)
-    .sort((a, b) => b.totalSpent - a.totalSpent)
-    .map((customer, index) => ({
-      ...customer,
+  const sortedProducts = Object.values(productMap)
+    .sort((a, b) => b.orders - a.orders || b.revenue - a.revenue)
+    .map((product, index) => ({
+      ...product,
       id: index.toString(),
-      formattedTotal: `₱${customer.totalSpent.toLocaleString()}`,
+      formattedRevenue: `₱${product.revenue.toLocaleString()}`,
     }));
 
+  const displayedProducts = showAll ? sortedProducts : sortedProducts.slice(0, 3);
+
   return (
-    <View className="mb-6">
-      <Text className="text-[#1F5A4B] font-bold text-lg mb-3">
-        Most Frequent Customers
-      </Text>
+    <View className="mb-8">
+      <View className="flex-row justify-between items-end mb-3">
+        <Text className="text-[#1F5A4B] font-bold text-lg">Top Selling Products</Text>
+
+        {sortedProducts.length > 3 && (
+          <Pressable onPress={() => setShowAll(!showAll)}>
+            <Text className="text-[#1F5A4B] text-xs font-medium">
+              {showAll ? "Show Less ↑" : "View All →"}
+            </Text>
+          </Pressable>
+        )}
+      </View>
 
       <View className="bg-[#FFFDF9] rounded-xl border border-[#E6EFE7]">
-        {sortedCustomers.length === 0 ? (
+        {displayedProducts.length === 0 ? (
           <View className="p-4 items-center justify-center">
-            <Text className="text-[#6B8F82] text-sm">
-              No delivered orders for this date.
-            </Text>
+            <Text className="text-[#6B8F82] text-sm">No delivered products for this date.</Text>
           </View>
         ) : (
-          sortedCustomers.map((customer, index) => (
+          displayedProducts.map((product, index) => (
             <View
-              key={customer.id}
+              key={product.id}
               className={`p-4 flex-row justify-between items-center ${
-                index !== sortedCustomers.length - 1
-                  ? "border-b border-[#E6EFE7]"
-                  : ""
+                index !== displayedProducts.length - 1 ? "border-b border-[#E6EFE7]" : ""
               }`}
             >
-              <View>
-                <Text className="font-bold text-[#1F5A4B] text-[18px]">
-                  {customer.name}
-                </Text>
-                <Text className="text-[#6B8F82] text-xs mt-1">
-                  {customer.orders} Orders
-                </Text>
+              <View className="flex-1">
+                <View className="flex-row items-center mb-1">
+                  <Text className="font-bold text-[#1F5A4B] text-[16px]">{product.name}</Text>
+                  <View className="bg-[#EAF4EE] px-2 py-0.5 rounded-full ml-2 border border-[#D1E8D5]">
+                    <Text className="text-[#1F5A4B] text-[12px] font-bold">Top {index + 1}</Text>
+                  </View>
+                </View>
+                <Text className="text-[#6B8F82] text-[15px]">{product.orders} Orders</Text>
               </View>
-
-              <Text className="font-bold text-[#1F5A4B] text-[17px]">
-                {customer.formattedTotal}
-              </Text>
+              <View className="items-end">
+                <Text className="font-bold text-[18px] text-[#1F5A4B]">{product.formattedRevenue}</Text>
+              </View>
             </View>
           ))
         )}
-
-        <View className="bg-[#F7FBF8] p-3 rounded-b-xl border-t border-[#E6EFE7]">
-          <Text className="text-[#6B8F82] text-[10px] text-center">
-            Showing top {sortedCustomers.length} customers this period.
-          </Text>
-        </View>
       </View>
     </View>
   );
 };
 
-export default MostFrequentCustomer;
+export default TopSellingProduct;

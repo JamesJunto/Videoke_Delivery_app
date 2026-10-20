@@ -11,19 +11,11 @@ const splitName = (value) => {
 };
 
 const validateDeliverySchedule = (value) => {
-  if (!value || !String(value).trim()) {
-    throw new Error("Delivery schedule is required.");
+  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(String(value))) {
+    throw new Error("Invalid delivery schedule. Use YYYY-MM-DD.");
   }
 
-  const schedule = String(value).trim();
-
-  const mysqlSchedule = schedule.replace("T", " ");
-
-  if (Number.isNaN(Date.parse(schedule))) {
-    throw new Error("Invalid delivery schedule.");
-  }
-
-  return mysqlSchedule;
+  return String(value);
 };
 
 export const createOrder = async (orderData) => {
@@ -169,24 +161,27 @@ export const getOrders = async () => {
   const [results] = await db.query(
     `SELECT
         o.order_id,
-        o.status,
         CONCAT(c.first_name, ' ', c.last_name) AS name,
         c.phone,
+        c.address,
         p.product_name,
         p.description,
-        c.address,
         oi.quantity,
         oi.price,
         oi.subtotal,
         o.delivery_fee,
         o.total,
         o.payment_status,
+        o.status,
         o.delivery_schedule
-     FROM orders o
-     INNER JOIN order_items oi ON oi.order_id = o.order_id
-     INNER JOIN customer c ON o.customer_id = c.customer_id
-     INNER JOIN product p ON oi.product_id = p.product_id
-     ORDER BY o.created_at DESC`
+    FROM orders o
+    INNER JOIN customer c
+        ON o.customer_id = c.customer_id
+    INNER JOIN order_items oi
+        ON oi.order_id = o.order_id
+    INNER JOIN product p
+        ON oi.product_id = p.product_id
+    ORDER BY o.created_at DESC;`
   );
 
   return results;

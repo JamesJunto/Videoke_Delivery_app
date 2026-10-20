@@ -42,6 +42,11 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
 
   useEffect(() => {
     if (order) {
+
+      console.log("Raw backend value:", order.delivery_schedule);
+      console.log("String value:", String(order.delivery_schedule));
+      console.log("First 10 characters:", String(order.delivery_schedule).slice(0, 10));
+
       setForm({
         name: order.name ?? "",
         contact_num: order.contact_num ?? order.phone ?? "",
@@ -49,7 +54,9 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
         product_name: order.product_name ?? "",
         description: order.description ?? "",
         delivery_schedule: order.delivery_schedule
-          ? order.delivery_schedule.slice(0, 10)
+          ? new Date(order.delivery_schedule).toLocaleDateString("en-CA", {
+              timeZone: "Asia/Manila",
+            })
           : "",
         delivery_fee: order.delivery_fee ?? "",
         total: String(order.total ?? ""),
@@ -58,9 +65,14 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
       });
 
       if (order.delivery_schedule) {
-        setDeliveryDate(
-          new Date(`${order.delivery_schedule.slice(0, 10)}T12:00:00`),
-        );
+        const dateString = new Date(order.delivery_schedule)
+          .toLocaleDateString("en-CA", {
+            timeZone: "Asia/Manila",
+          });
+
+        const [year, month, day] = dateString.split("-").map(Number);
+
+        setDeliveryDate(new Date(year, month - 1, day, 12, 0, 0));
       } else {
         setDeliveryDate(new Date());
       }
@@ -92,13 +104,17 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
 
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
-    if (event.type !== "set" || !selectedDate) return;
 
-    setDeliveryDate(selectedDate);
+    if (!selectedDate) return;
+
     const year = selectedDate.getFullYear();
     const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
     const day = String(selectedDate.getDate()).padStart(2, "0");
-    setField("delivery_schedule", `${year}-${month}-${day} 00:00:00`);
+
+    const formatted = `${year}-${month}-${day}`;
+
+    setDeliveryDate(selectedDate);
+    setField("delivery_schedule", formatted);
   };
 
   const handleSave = async () => {
@@ -313,29 +329,6 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
                 </Field>
 
                 <Field label="Delivery Schedule">
-                  {Platform.OS === "web" ? (
-                    <View className="rounded-[12px] border border-[#E6EFE7] bg-[#FFFDF9] px-4 py-3">
-                      <input
-                        type="date"
-                        min={new Date().toLocaleDateString("en-CA")}
-                        value={form.delivery_schedule.slice(0, 10)}
-                        onChange={(event) => {
-                          const date = event.target.value;
-                          if (!date) return;
-                          setDeliveryDate(new Date(`${date}T12:00:00`));
-                          setField("delivery_schedule", `${date} 00:00:00`);
-                        }}
-                        style={{
-                          width: "100%",
-                          border: "none",
-                          outline: "none",
-                          background: "transparent",
-                          color: "#1F5A4B",
-                          fontSize: 14,
-                        }}
-                      />
-                    </View>
-                  ) : (
                     <>
                       <Pressable
                         onPress={() => setShowDatePicker(true)}
@@ -368,12 +361,12 @@ const OrderEditModal = ({ visible, onClose, order, onSave }) => {
                           value={deliveryDate}
                           mode="date"
                           display="default"
-                          minimumDate={new Date()}
-                          onChange={handleDateChange}
+                          onValueChange={handleDateChange}
+                          onDismiss={() => setShowDatePicker(false)}
                         />
                       )}
-                    </>
-                  )}
+
+                  </>
                 </Field>
 
                 <Field label="Delivery Fee (₱)">

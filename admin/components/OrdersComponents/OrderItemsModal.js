@@ -1,9 +1,48 @@
+
 import { Modal, View, Text, Pressable, ScrollView } from "react-native";
-import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 const OrderDetailsModal = ({ visible, onClose, order }) => {
   if (!order) return null;
+
+  const formatDeliveryDate = (dateValue) => {
+    if (!dateValue) return "No delivery date";
+
+    const value = String(dateValue);
+
+    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})(?: |$)/);
+
+    if (match) {
+      const [year, month, day] = match;
+
+      const date = new Date(
+        Number(year),
+        Number(month) - 1,
+        Number(day)
+      );
+
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return "Invalid date";
+    }
+
+    return date.toLocaleDateString("en-US", {
+      timeZone: "Asia/Manila",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  console.log("DELIVERY DATE FROM BACKEND:", order.delivery_schedule);
 
   return (
     <Modal
@@ -19,7 +58,7 @@ const OrderDetailsModal = ({ visible, onClose, order }) => {
           <View className="mb-4 flex-row items-center">
             <Pressable
               onPress={onClose}
-              className=" h-10 w-10 items-center justify-center ]"
+              className="h-10 w-10 items-center justify-center"
             >
               <Ionicons name="arrow-back" size={24} color="#1F5A4B" />
             </Pressable>
@@ -32,15 +71,14 @@ const OrderDetailsModal = ({ visible, onClose, order }) => {
               <Text className="mt-1 text-[12px] text-[#6B8A84]">
                 #{order.order_id}
               </Text>
-
             </View>
           </View>
-          <Text className="mb-3 mt-3 text-[12px] font-semibold text-[#1F5A4B] bg-[#EAF6F0] w-[24%] text-center p-2 rounded-full">
+
+          <Text className="mb-3 mt-3 w-[24%] rounded-full bg-[#EAF6F0] p-2 text-center text-[12px] font-semibold text-[#1F5A4B]">
             {order.status}
           </Text>
 
           <View className="mb-4 rounded-[12px] border border-[#E6EFE7] bg-[#FFFDF9] p-4">
-
             <View className="mb-2.5 flex-row items-center">
               <Text className="text-[17px] font-bold text-[#1F5A4B]">
                 Customer
@@ -69,10 +107,9 @@ const OrderDetailsModal = ({ visible, onClose, order }) => {
               Delivery address
             </Text>
 
-            <Text className="text-[#1F5A4B] font-normal mt-2 text-[13px]">
+            <Text className="mt-2 text-[13px] font-normal text-[#1F5A4B]">
               {order.address}
             </Text>
-
           </View>
 
           <View className="mb-4 rounded-[12px] border border-[#E6EFE7] bg-[#FFFDF9] p-4">
@@ -82,6 +119,7 @@ const OrderDetailsModal = ({ visible, onClose, order }) => {
                 size={19}
                 color="#1F5A4B"
               />
+
               <Text className="ml-2 text-[15px] font-bold text-[#1F5A4B]">
                 Package Details
               </Text>
@@ -100,7 +138,7 @@ const OrderDetailsModal = ({ visible, onClose, order }) => {
             </Text>
 
             <Text className="mb-3 text-[13px] text-[#6B8A84]">
-              {order.delivery_schedule}
+              {formatDeliveryDate(order.delivery_schedule)}
             </Text>
 
             <View className="my-3 h-[1px] bg-[#E6EFE7]" />
@@ -149,7 +187,7 @@ const OrderDetailsModal = ({ visible, onClose, order }) => {
               </Text>
 
               <Text className="text-[13px] font-medium text-[#1F5A4B]">
-                ₱{order.delivery_fee.toLocaleString()}
+                ₱{Number(order.delivery_fee ?? 0).toLocaleString()}
               </Text>
             </View>
 
@@ -171,7 +209,7 @@ const OrderDetailsModal = ({ visible, onClose, order }) => {
               </Text>
 
               <Text className="text-[22px] font-bold text-[#1F5A4B]">
-                ₱{order.total.toLocaleString()}
+                ₱{Number(order.total ?? 0).toLocaleString()}
               </Text>
             </View>
           </View>

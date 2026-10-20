@@ -1,4 +1,3 @@
-
 import {
   Modal,
   View,
@@ -8,7 +7,7 @@ import {
   TextInput,
   Alert,
   Platform
-  }
+}
 from "react-native";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,7 +17,7 @@ import useOrder from "../../hooks/useOrder";
 import useInventory from "../../hooks/useInventory";
 import SelectProductModal from "./SelectProductModal";
 
-const AddOrderModal = ({ visible, onClose, refetch }) => {
+const AddOrderModal = ({ visible, onClose  }) => {
   const { items, loading, error } = useInventory();
   const { handleCreateOrder, fetchOrders } = useOrder();
 
@@ -35,7 +34,7 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
     delivery_schedule: "",
     delivery_fee: "",
     total: "",
-    payment_status:"",
+    payment_status:"Unpaid",
     status: "pending",
   });
 
@@ -63,21 +62,18 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
     setProductModalVisible(false);
   };
 
-  const handleDateChange = (event, selectedDate) => {
+  const handleDateValueChange = (event, selectedDate) => {
     setShowDatePicker(false);
 
-    if (event.type !== "set" || !selectedDate) {
-      return;
-    }
+    if (event.type === "dismissed" || !selectedDate) return;
 
     setDeliveryDate(selectedDate);
 
     const year = selectedDate.getFullYear();
     const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
     const day = String(selectedDate.getDate()).padStart(2, "0");
-    const formattedDate = `${year}-${month}-${day} 00:00:00`;
-    updateField("delivery_schedule", formattedDate);
 
+    updateField("delivery_schedule", `${year}-${month}-${day} 00:00:00`);
   };
 
   const resetForm = () => {
@@ -90,7 +86,7 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
       delivery_schedule: "",
       delivery_fee: "",
       total: "",
-      payment_status: "",
+      payment_status: "Unpaid",
       status: "pending",
     });
 
@@ -115,7 +111,7 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
     );
 
     if (emptyField) {
-     console.log(`Missing information: ${emptyField.label}`)
+      Alert.alert("Missing Information", `Please provide ${emptyField.label}.`);
       return;
     }
 
@@ -125,7 +121,7 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
       Number(form.delivery_fee) < 0 ||
       Number(form.total) <= 0
     ) {
-     alert(
+      Alert.alert(
         "Invalid Amount",
         "Delivery fee must be zero or greater, and total amount must be greater than zero."
       );
@@ -148,12 +144,11 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
 
     try {
       await handleCreateOrder(newOrder);
-      await refetch()
+      fetchOrders();
       resetForm();
       onClose();
-
     } catch (err) {
-     alert(
+      Alert.alert(
         "Failed to Create Order",
         err?.response?.data?.message ||
           err?.message ||
@@ -281,65 +276,35 @@ const AddOrderModal = ({ visible, onClose, refetch }) => {
                 Delivery Schedule
               </Text>
 
+              <Pressable
+                onPress={() => setShowDatePicker(true)}
+                className="flex-row items-center justify-between rounded-[8px] border border-[#E6EFE7] bg-[#FFFDF9] px-3 py-3"
+              >
+                <Text
+                  className={`text-[14px] ${
+                    form.delivery_schedule ? "text-[#1F5A4B]" : "text-[#A8BFB9]"
+                  }`}
+                >
+                  {form.delivery_schedule
+                    ? deliveryDate.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })
+                    : "Select delivery date"}
+                </Text>
 
-              {Platform.OS === "web" ? (
-                <View className="rounded-[8px] border border-[#E6EFE7]  bg-[#FFFDF9] px-3 py-2.5">
-                  <input
-                    type="date"
-                    min={new Date().toLocaleDateString("en-CA")}
-                    value={form.delivery_schedule.slice(0, 10)}
-                    onChange={(event) => {
-                      const date = event.target.value;
+                <Ionicons name="calendar-outline" size={20} color="#1F5A4B" />
+              </Pressable>
 
-                      if (!date) return;
-
-                      setDeliveryDate(new Date(`${date}T12:00:00`));
-                      updateField("delivery_schedule", `${date} 00:00:00`);
-                    }}
-
-                    style={{
-                      width: "100%",
-                      border: "none",
-                      outline: "none",
-                      background: "transparent",
-                      color: "#1F5A4B",
-                      fontSize: 14,
-                    }}
-                  />
-                </View>
-              ) : (
-                <>
-                  <Pressable
-                    onPress={() => setShowDatePicker(true)}
-                    className="flex-row items-center justify-between rounded-[8px] border border-[#E6EFE7] bg-[#FFFDF9] px-3 py-3"
-                  >
-                    <Text
-                      className={`text-[14px] ${
-                        form.delivery_schedule ? "text-[#1F5A4B]" : "text-[#A8BFB9]"
-                      }`}
-                    >
-                      {form.delivery_schedule
-                        ? deliveryDate.toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })
-                        : "Select delivery date"}
-                    </Text>
-
-                    <Ionicons name="calendar-outline" size={20} color="#1F5A4B" />
-                  </Pressable>
-
-                  {showDatePicker && (
-                    <DateTimePicker
-                      value={deliveryDate}
-                      mode="date"
-                      display="default"
-                      minimumDate={new Date()}
-                      onChange={handleDateChange}
-                    />
-                  )}
-                </>
+              {showDatePicker && (
+                <DateTimePicker
+                  value={deliveryDate}
+                  mode="date"
+                  display={Platform.OS === "ios" ? "spinner" : "default"}
+                  minimumDate={new Date()}
+                  onChange={handleDateValueChange}
+                />
               )}
             </View>
 

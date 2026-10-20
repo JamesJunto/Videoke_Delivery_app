@@ -15,42 +15,33 @@ const InventoryItems = ({ searchQuery = "" }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const DeleteItem = async (item) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${item.product_name}"? This action cannot be undone.`
-    );
-
-    /*
-    // if mobile gamit ni Alert.alert():
+  const DeleteItem = (item) => {
     Alert.alert(
       "Delete Package",
       `Are you sure you want to delete "${item.product_name}"? This action cannot be undone.`,
       [
-        { text: "Cancel", style: "cancel" },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
         {
           text: "Delete",
           style: "destructive",
           onPress: async () => {
-            //try {
-              await handleDelete(item.product_id)
+            try {
+              await handleDeleteInventory(item.product_id);
               await fetchInventory();
             } catch (error) {
-              window.alert("Failed to delete package.");
+              Alert.alert(
+                "Error",
+                "Failed to delete package."
+              );
             }
           },
         },
-      ]
+      ],
+      { cancelable: true }
     );
-    */
-
-    if (!confirmed) return;
-
-    try {
-      await  handleDeleteInventory(item.product_id)
-      await fetchInventory();
-    } catch (error) {
-      window.alert("Failed to delete package.");
-    }
   };
 
   const filteredItems = items.filter((item) => {
