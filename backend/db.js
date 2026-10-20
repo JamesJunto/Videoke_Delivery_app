@@ -1,11 +1,13 @@
 import mysql from 'mysql2';
+import "dotenv/config";
 
 export const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'jamesrainier123',
-    database: 'videoke_db',
-    connectionLimit: 10
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: Number(process.env.DB_PORT || 3306),
+  connectionLimit: 10
 });
 
 export const db = pool.promise();
