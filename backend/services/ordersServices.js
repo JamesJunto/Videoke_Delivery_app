@@ -23,6 +23,7 @@ const validateDeliverySchedule = (value) => {
 
   return parsedDate.toISOString().split('T')[0];
 };
+
 export const createOrder = async (orderData) => {
   const connection = await db.getConnection();
 
@@ -167,6 +168,7 @@ export const getOrders = async () => {
     `SELECT
         o.order_id,
         CONCAT(c.first_name, ' ', c.last_name) AS name,
+        c.customer_id,
         c.phone,
         c.address,
         p.product_name,
