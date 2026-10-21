@@ -6,7 +6,6 @@ import authRoutes from "./routes/authRoutes.js"
 import { rateLimiter } from "./middleware/rateLimit.js";
 import { authMiddleware } from './middleware/auth.js';
 import cors from "cors";
-import { WebSocketServer, WebSocket } from "ws";
 
 const app = express();
 
@@ -22,23 +21,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-//const wss = new WebSocketServer({ server });
-
-/*
-wss.on("connection", (socket) => {
-  console.log("Client connected");
-
-  socket.on("message", (message) => {
-    console.log(message.toString());
-
-    wss.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send("Hello from the server");
-      }
-
-    });
-  });
-});
-
-*/
