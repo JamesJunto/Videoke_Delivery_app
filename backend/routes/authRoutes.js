@@ -14,16 +14,22 @@ router.post("/login", async (req, res) => {
 
     if (!account) {
       return res.status(401).json({
+        success: false,
         message: "Invalid credentials",
       });
     }
 
-    const payload = { id: account.admin_id, role: "admin" };
-    const AccessToken = jwt.sign(payload, ACCESS_TOKEN_KEY)
+    const payload = {
+      id: account.admin_id,
+      role: "admin",
+    };
+
+    const accessToken = jwt.sign(payload, ACCESS_TOKEN_KEY);
 
     return res.status(200).json({
+      success: true,
       message: "Login successful",
-      accessToken: AccessToken,
+      accessToken,
     });
 
   } catch (error) {

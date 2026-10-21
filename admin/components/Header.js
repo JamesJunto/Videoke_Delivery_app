@@ -13,13 +13,6 @@ const Header = () => {
   const handleLogout = () => {
     setShowModal(false);
 
-    if (typeof window !== "undefined") {
-      const confirmed = window.confirm("Are you sure you want to log out?");
-      if (confirmed) {
-        router.replace("/screens/LoginScreen");
-      }
-      return;
-    }
 
     Alert.alert("Logout", "Are you sure you want to log out?", [
       { text: "Cancel", style: "cancel" },

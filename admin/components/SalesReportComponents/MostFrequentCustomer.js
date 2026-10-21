@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
-const TopSellingProduct = ({ orders = [], date }) => {
+const MostFrequentCustomer = ({ orders = [], date }) => {
   const [showAll, setShowAll] = useState(false);
 
   const targetDate = date ? String(date).slice(0, 10) : "";
@@ -9,47 +9,62 @@ const TopSellingProduct = ({ orders = [], date }) => {
   const deliveredOrders = orders.filter((order) => {
     if (!order.delivery_schedule) return false;
 
-    const scheduleDate = new Date(order.delivery_schedule).toLocaleDateString("en-CA");
+    const scheduleDate = new Date(
+      order.delivery_schedule
+    ).toLocaleDateString("en-CA");
+
     const orderStatus = String(order.status || "").trim().toLowerCase();
 
     return scheduleDate === targetDate && orderStatus === "delivered";
   });
 
-  const productMap = deliveredOrders.reduce((acc, order) => {
-    const productName = order.product_name || order.productName;
+  const customerMap = deliveredOrders.reduce((acc, order) => {
+    const customerId = order.customer_id;
+    const customerName = order.customer_name || order.name;
 
-    if (!productName) return acc;
+    const paymentStatus = String(order.payment_status || "")
+      .trim()
+      .toLowerCase();
 
-    if (!acc[productName]) {
-      acc[productName] = {
-        name: productName,
+    if (!customerId || !customerName || paymentStatus !== "paid") {
+      return acc;
+    }
+
+    if (!acc[customerId]) {
+      acc[customerId] = {
+        customer_id: customerId,
+        name: customerName,
         orders: 0,
         revenue: 0,
       };
     }
 
-    acc[productName].orders += 1;
-    acc[productName].revenue += Number(order.subtotal) || 0;
+    acc[customerId].orders += 1;
+    acc[customerId].revenue += Number(order.subtotal) || 0;
 
     return acc;
   }, {});
 
-  const sortedProducts = Object.values(productMap)
+  const sortedCustomers = Object.values(customerMap)
     .sort((a, b) => b.orders - a.orders || b.revenue - a.revenue)
-    .map((product, index) => ({
-      ...product,
-      id: index.toString(),
-      formattedRevenue: `₱${product.revenue.toLocaleString()}`,
+    .map((customer) => ({
+      ...customer,
+      id: String(customer.customer_id),
+      formattedRevenue: `₱${customer.revenue.toLocaleString("en-PH")}`,
     }));
 
-  const displayedProducts = showAll ? sortedProducts : sortedProducts.slice(0, 3);
+  const displayedCustomers = showAll
+    ? sortedCustomers
+    : sortedCustomers.slice(0, 3);
 
   return (
     <View className="mb-8">
       <View className="flex-row justify-between items-end mb-3">
-        <Text className="text-[#1F5A4B] font-bold text-lg">Top Selling Products</Text>
+        <Text className="text-[#1F5A4B] font-bold text-lg">
+          Most Frequent Customer
+        </Text>
 
-        {sortedProducts.length > 3 && (
+        {sortedCustomers.length > 3 && (
           <Pressable onPress={() => setShowAll(!showAll)}>
             <Text className="text-[#1F5A4B] text-xs font-medium">
               {showAll ? "Show Less ↑" : "View All →"}
@@ -58,37 +73,53 @@ const TopSellingProduct = ({ orders = [], date }) => {
         )}
       </View>
 
-      <View className="bg-[#FFFDF9] rounded-xl border border-[#E6EFE7]">
-        {displayedProducts.length === 0 ? (
-          <View className="p-4 items-center justify-center">
-            <Text className="text-[#6B8F82] text-sm">No delivered products for this date.</Text>
-          </View>
-        ) : (
-          displayedProducts.map((product, index) => (
+      {displayedCustomers.length === 0 ? (
+        <View className="items-center justify-center py-4">
+          <Text className="text-[#1F5A4B] text-sm">
+            No paid, delivered customers for this date.
+          </Text>
+        </View>
+      ) : (
+        <View className="bg-[#FFFDF9] rounded-xl border border-[#E6EFE7]">
+          {displayedCustomers.map((customer, index) => (
             <View
-              key={product.id}
+              key={customer.id}
               className={`p-4 flex-row justify-between items-center ${
-                index !== displayedProducts.length - 1 ? "border-b border-[#E6EFE7]" : ""
+                index !== displayedCustomers.length - 1
+                  ? "border-b border-[#E6EFE7]"
+                  : ""
               }`}
             >
               <View className="flex-1">
                 <View className="flex-row items-center mb-1">
-                  <Text className="font-bold text-[#1F5A4B] text-[16px]">{product.name}</Text>
+                  <Text className="font-bold text-[#1F5A4B] text-[16px]">
+                    {customer.name}
+                  </Text>
+
                   <View className="bg-[#EAF4EE] px-2 py-0.5 rounded-full ml-2 border border-[#D1E8D5]">
-                    <Text className="text-[#1F5A4B] text-[12px] font-bold">Top {index + 1}</Text>
+                    <Text className="text-[#1F5A4B] text-[12px] font-bold">
+                      Top {index + 1}
+                    </Text>
                   </View>
                 </View>
-                <Text className="text-[#6B8F82] text-[15px]">{product.orders} Orders</Text>
+
+                <Text className="text-[#6B8F82] text-[15px]">
+                  {customer.orders}{" "}
+                  {customer.orders === 1 ? "Order" : "Orders"}
+                </Text>
               </View>
+
               <View className="items-end">
-                <Text className="font-bold text-[18px] text-[#1F5A4B]">{product.formattedRevenue}</Text>
+                <Text className="font-bold text-[18px] text-[#1F5A4B]">
+                  {customer.formattedRevenue}
+                </Text>
               </View>
             </View>
-          ))
-        )}
-      </View>
+          ))}
+        </View>
+      )}
     </View>
   );
 };
 
-export default TopSellingProduct;
+export default MostFrequentCustomer;

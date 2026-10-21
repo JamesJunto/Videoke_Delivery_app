@@ -5,6 +5,7 @@ import {
   TextInput,
   Pressable,
   ActivityIndicator,
+  Alert
 } from "react-native";
 import { useRouter } from "expo-router";
 import useAuth from "../../hooks/useAuth";
@@ -18,10 +19,23 @@ export default function Login() {
 
   const handleSignIn = async () => {
     try {
-      await handleLogin(email, password);
+      const response = await handleLogin(email, password);
+
+      if (!response.success) {
+        Alert.alert(
+          "Login Failed",
+          response.message || "Invalid email or password."
+        );
+        return;
+      }
+
       router.replace("/screens/DashboardScreen");
     } catch (error) {
-      console.log("Login Error:", error);
+      const message =
+        error.response?.data?.message ||
+        "Something went wrong. Please try again.";
+
+      Alert.alert("Login Failed", message);
     }
   };
 

@@ -22,7 +22,7 @@ const formatToDbString = (date) => {
 };
 
 const SalesReportScreen = () => {
-  const { orders } = useOrder();
+  const { orders, loading } = useOrder();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -34,12 +34,13 @@ const SalesReportScreen = () => {
 
     if (event.type === "dismissed" || !date) return;
 
-    const y = date.getFullYear();
-    const m = date.getMonth();
-    const d = date.getDate();
-    const normalized = new Date(y, m, d, 12, 0, 0, 0);
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
 
-    setSelectedDate(normalized);
+    const normalizedDate = new Date(year, month, day, 12, 0, 0, 0);
+
+    setSelectedDate(normalizedDate);
   };
 
   return (
@@ -64,10 +65,9 @@ const SalesReportScreen = () => {
               name="calendar-outline"
               size={20}
               color="#1F5A4B"
-              className="mr-2"
             />
 
-            <Text className="text-[#1F5A4B] font-medium text-base">
+            <Text className="text-[#1F5A4B] font-medium text-base ml-2">
               {selectedDate.toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
@@ -89,7 +89,6 @@ const SalesReportScreen = () => {
             mode="date"
             display="default"
             onChange={handleDateChange}
-            onDismiss={() => setShowDatePicker(false)}
           />
         )}
       </View>
@@ -107,11 +106,12 @@ const SalesReportScreen = () => {
         </Text>
       </View>
 
-      <PeriodPerformance date={reportDate} orders={orders} />
+      <PeriodPerformance date={reportDate} orders={orders} loading={loading} />
 
-      <MostFrequentCustomer orders={orders} date={reportDate} />
+      <MostFrequentCustomer orders={orders} date={reportDate} loading={loading} />
 
-      <TopSellingProduct orders={orders} date={reportDate} />
+      <TopSellingProduct orders={orders} date={reportDate} loading={loading}  />
+
     </ScrollView>
   );
 };

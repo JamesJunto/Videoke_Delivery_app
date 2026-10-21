@@ -5,9 +5,7 @@ export const getAuth = async (email, password) => {
   try {
     const response = await api.post("/auth/login", { email, password });
 
-    await AsyncStorage.setItem('accessToken', response.data.accessToken);
-
-     //localStorage.setItem('accessToken', response.data.accessToken);
+    await AsyncStorage.setItem("accessToken", response.data.accessToken);
 
     return response.data;
   } catch (error) {

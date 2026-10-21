@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import calculateRevenue from "../../utils/calculateRevenue";
 
-const PeriodPerformance = ({ date, orders = [] }) => {
+const PeriodPerformance = ({ date, orders = [], loading }) => {
   const targetDate = date ? date.slice(0, 10) : "";
 
   const filteredOrders = orders
@@ -22,9 +22,9 @@ const PeriodPerformance = ({ date, orders = [] }) => {
   const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
   const PERIOD_PERFORMANCE = {
-    revenue: `₱${totalRevenue.toLocaleString()}`,
-    orders: totalOrders.toString(),
-    avgOrderValue: `₱${avgOrderValue.toLocaleString()}`,
+    revenue: loading ? "Processing" : `₱${totalRevenue.toLocaleString()}`,
+    orders:  loading ? "Processing" :totalOrders.toString(),
+    avgOrderValue: loading ? "Processing" : `₱${avgOrderValue.toLocaleString()}`,
   };
 
   return (
