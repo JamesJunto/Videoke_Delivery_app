@@ -44,7 +44,6 @@
         }
       ]
     ],
-
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
@@ -54,6 +53,12 @@
       "eas": {
         "projectId": "6856dd15-eebb-4a0e-9ee7-870ca97e4282"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/6856dd15-eebb-4a0e-9ee7-870ca97e4282"
     }
   }
 }

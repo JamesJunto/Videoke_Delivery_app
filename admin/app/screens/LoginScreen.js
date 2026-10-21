@@ -31,12 +31,9 @@ export default function Login() {
 
       router.replace("/screens/DashboardScreen");
     } catch (error) {
-      const message =
-        error.response?.data?.message ||
-        "Something went wrong. Please try again.";
-
-      Alert.alert("Login Failed", message);
+      Alert.alert("Login Failed", error);
     }
+
   };
 
   return (
