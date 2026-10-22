@@ -19,22 +19,17 @@ export default function Login() {
 
   const handleSignIn = async () => {
     try {
-      const response = await handleLogin(email, password);
-
-      if (!response.success) {
-        Alert.alert(
-          "Login Failed",
-          response.message || "Invalid email or password."
-        );
-        return;
-      }
+     await handleLogin(email, password);
 
       router.replace("/screens/DashboardScreen");
     } catch (error) {
-      Alert.alert("Login Failed", error);
+      Alert.alert(
+        "Login Failed",
+        error.response?.data?.message || error.message || "Something went wrong"
+      );
     }
 
-  };
+    };
 
   return (
     <View className="flex-1 justify-center bg-[#FFFDF9] px-6 py-8">

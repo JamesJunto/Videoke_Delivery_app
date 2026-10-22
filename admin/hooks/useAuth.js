@@ -5,18 +5,18 @@ const useAuth = () => {
   const [credentials, setCredentials] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (email, password) => {
-    try {
-      setLoading(true);
+    const handleLogin = async (email, password) => {
+      try {
+        setLoading(true);
 
-      const data = await getAuth(email, password);
-      setCredentials(data);
+        const data = await getAuth(email, password);
+        setCredentials(data);
 
-      return data;
-    } finally {
-      setLoading(false);
-    }
-  };
+        return data;
+      } finally {
+        setLoading(false);
+      }
+    };
 
   const handleRegister = async (email,password) => {
     try {

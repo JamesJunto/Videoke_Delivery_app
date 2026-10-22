@@ -2,6 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_BASE_URL = 'https://videokedeliveryapp-production.up.railway.app/api';
+//const API_BASE_URL = 'http://192.168.254.100:3000/api';
 
 
 export const api = axios.create({

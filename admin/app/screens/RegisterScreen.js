@@ -4,6 +4,7 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
@@ -21,7 +22,11 @@ const Register = () => {
       await handleRegister(email, password);
       router.replace("/screens/LoginScreen");
     } catch (error) {
-      console.log("SignUp Error:", error);
+      Alert.alert(
+        "Registration Failed",
+        error.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
     }
   };
 
